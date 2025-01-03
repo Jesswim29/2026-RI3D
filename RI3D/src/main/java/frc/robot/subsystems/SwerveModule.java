@@ -5,7 +5,10 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -51,8 +54,8 @@ public class SwerveModule {
         m_driveFF = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
 
         // TODO see what this changed to
-        m_steerEncoder.setPositionConversionFactor((1/12.8) * 2 * Math.PI);
-        m_driveEncoder.setVelocityConversionFactor(((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60);
+        // m_steerEncoder.setPositionConversionFactor((1/12.8) * 2 * Math.PI);
+        // m_driveEncoder.setVelocityConversionFactor(((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60);
 
         m_drivePID = m_driveMotor.getClosedLoopController();
         // m_drivePID = new PIDController(0.1, 0, 0);
@@ -61,6 +64,7 @@ public class SwerveModule {
 
         m_swerveID = swerveID;
 
+        configSteer();
         resetEncoders();
 
         configDrive();
@@ -150,20 +154,30 @@ public class SwerveModule {
      * 
      */
     private void configDrive() {
-        // TODO figure out configuration changes
-        m_driveMotor.restoreFactoryDefaults();
+        var config = new SparkMaxConfig();
 
-        m_driveMotor.getEncoder().setVelocityConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)); // in meters per second
-        m_driveMotor.getEncoder().setPositionConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75)));
+        config.idleMode(DrivetrainConstants.DriveParams.kIdleMode);
+        config.encoder
+            .positionConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75)))
+            .velocityConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)); // in meters per second
+        config.closedLoop
+            // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .pid(
+                DrivetrainConstants.DriveParams.kP,
+                DrivetrainConstants.DriveParams.kI,
+                DrivetrainConstants.DriveParams.kD
+            );
 
-        m_drivePID.setP(DrivetrainConstants.DriveParams.kP);
-        m_drivePID.setI(DrivetrainConstants.DriveParams.kI);
-        m_drivePID.setD(DrivetrainConstants.DriveParams.kD);
-        // m_drivePID.setFF(DrivetrainConstants.DriveParams.kFF);
+        m_driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
 
-        m_driveMotor.setIdleMode(DrivetrainConstants.DriveParams.kIdleMode);
+    public void configSteer() {
+        var config = new SparkMaxConfig();
 
-        m_driveMotor.burnFlash();
+        config.encoder
+            .positionConversionFactor((1/12.8) * 2 * Math.PI);
+
+        m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void updateSteer() {

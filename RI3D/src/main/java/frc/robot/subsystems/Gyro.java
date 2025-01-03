@@ -28,7 +28,7 @@ public class Gyro {
      * @return gyro angle in degrees, clamped [0,360)
      */
     public double getGyroAngleClamped() {
-        // TODO check out what this was for
+        // TODO check out what this function was for
         return m_gyro.getRotation2d().getDegrees();
     }
 }
