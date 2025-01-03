@@ -1,12 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.WPI_CANCoder;
-import com.revrobotics.CANSparkMax;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkPIDController.AccelStrategy;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -17,15 +16,15 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class SwerveModule {
-    private final CANSparkMax m_driveMotor, m_steerMotor;
+    private final SparkMax m_driveMotor, m_steerMotor;
 
     private final RelativeEncoder m_driveEncoder, m_steerEncoder;
 
-    private final SparkPIDController m_drivePID;
+    private final SparkClosedLoopController m_drivePID;
     private final PIDController m_steerPID;
     private final SimpleMotorFeedforward m_driveFF;
 
-    private final WPI_CANCoder m_CANCoder;
+    private final CANcoder m_CANCoder;
 
     private final double m_encoderOffset;
 
@@ -41,9 +40,9 @@ public class SwerveModule {
      * @param encoderOffset starting encoder position
      */
     public SwerveModule(final int driveID, final int steerID, final int encoderID, final double encoderOffset, int swerveID) {
-        m_driveMotor = new CANSparkMax(driveID, MotorType.kBrushless);
-        m_steerMotor = new CANSparkMax(steerID, MotorType.kBrushless);       
-        m_CANCoder = new WPI_CANCoder(encoderID);
+        m_driveMotor = new SparkMax(driveID, MotorType.kBrushless);
+        m_steerMotor = new SparkMax(steerID, MotorType.kBrushless);       
+        m_CANCoder = new CANcoder(encoderID);
         m_encoderOffset = encoderOffset;
 
         m_driveEncoder = m_driveMotor.getEncoder();
@@ -51,12 +50,13 @@ public class SwerveModule {
         
         m_driveFF = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
 
+        // TODO see what this changed to
         m_steerEncoder.setPositionConversionFactor((1/12.8) * 2 * Math.PI);
         m_driveEncoder.setVelocityConversionFactor(((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60);
 
-        m_drivePID = m_driveMotor.getPIDController();
+        m_drivePID = m_driveMotor.getClosedLoopController();
         // m_drivePID = new PIDController(0.1, 0, 0);
-        m_steerPID = new PIDController(2, 0, 0); // TODO: set theses
+        m_steerPID = new PIDController(2, 0, 0); // TODO (old): set these
         m_steerPID.enableContinuousInput(-Math.PI, Math.PI);
 
         m_swerveID = swerveID;
@@ -133,7 +133,8 @@ public class SwerveModule {
     }
 
     private double getAbsEncoderPos() {
-        return Units.degreesToRadians(m_CANCoder.getAbsolutePosition() - m_encoderOffset);
+        // TODO check on getvalue call
+        return Units.degreesToRadians(m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset);
     }
 
     private void resetEncoders() {
@@ -149,6 +150,7 @@ public class SwerveModule {
      * 
      */
     private void configDrive() {
+        // TODO figure out configuration changes
         m_driveMotor.restoreFactoryDefaults();
 
         m_driveMotor.getEncoder().setVelocityConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)); // in meters per second

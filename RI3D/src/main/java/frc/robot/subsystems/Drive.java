@@ -65,6 +65,7 @@ public class Drive extends SubsystemBase {
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
+        // TODO these are deprecated fix em
         SwerveModuleState frontLeftState  = SwerveModuleState.optimize(moduleStates[0], new Rotation2d(m_frontLeft.getAngle()));
         SwerveModuleState frontRightState = SwerveModuleState.optimize(moduleStates[1], new Rotation2d(m_frontRight.getAngle()));
         SwerveModuleState backLeftState   = SwerveModuleState.optimize(moduleStates[2], new Rotation2d(m_backLeft.getAngle()));
