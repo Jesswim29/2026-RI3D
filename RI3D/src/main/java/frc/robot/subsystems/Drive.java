@@ -65,16 +65,15 @@ public class Drive extends SubsystemBase {
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
-        // TODO these are deprecated fix em
-        SwerveModuleState frontLeftState  = SwerveModuleState.optimize(moduleStates[0], new Rotation2d(m_frontLeft.getAngle()));
-        SwerveModuleState frontRightState = SwerveModuleState.optimize(moduleStates[1], new Rotation2d(m_frontRight.getAngle()));
-        SwerveModuleState backLeftState   = SwerveModuleState.optimize(moduleStates[2], new Rotation2d(m_backLeft.getAngle()));
-        SwerveModuleState backRightState  = SwerveModuleState.optimize(moduleStates[3], new Rotation2d(m_backRight.getAngle()));
+        moduleStates[0].optimize(new Rotation2d(m_frontLeft.getAngle()));
+        moduleStates[1].optimize(new Rotation2d(m_frontRight.getAngle()));
+        moduleStates[2].optimize(new Rotation2d(m_backLeft.getAngle()));
+        moduleStates[3].optimize(new Rotation2d(m_backRight.getAngle()));
 
-        m_frontLeft.setDesiredState(frontLeftState);
-        m_frontRight.setDesiredState(frontRightState);
-        m_backLeft.setDesiredState(backLeftState);
-        m_backRight.setDesiredState(backRightState);
+        m_frontLeft.setDesiredState(moduleStates[0]);
+        m_frontRight.setDesiredState(moduleStates[1]);
+        m_backLeft.setDesiredState(moduleStates[2]);
+        m_backRight.setDesiredState(moduleStates[3]);
     }
 
     /**
