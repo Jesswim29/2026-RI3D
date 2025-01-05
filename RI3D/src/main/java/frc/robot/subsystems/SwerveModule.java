@@ -138,7 +138,7 @@ public class SwerveModule {
 
     public double getAbsEncoderPos() {
         // TODO check on getvalue call
-        return Units.degreesToRadians(m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset);
+        return (m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset)*2*Math.PI;
     }
 
     private void resetEncoders() {
