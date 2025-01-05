@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -165,7 +166,7 @@ public class SwerveModule {
             .positionConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75)))
             .velocityConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)); // in meters per second
         config.closedLoop
-            // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(
                 DrivetrainConstants.DriveParams.kP/2.0,
                 DrivetrainConstants.DriveParams.kI,
@@ -188,25 +189,14 @@ public class SwerveModule {
 
         config.encoder
             .positionConversionFactor((1/12.8) * 2 * Math.PI);
-
-        
-
         
         m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void updateSteer() {
-        // double driveV = m_drivePID.calculate(getSpeed()) + m_driveFF.calculate(getSpeed());
         m_steerMotor.setVoltage(m_steerPID.calculate(getAngle()));
-        // m_driveMotor.setVoltage(driveV);
-        if(m_swerveID == 0) {
-            // System.out.println("Current setpoint: " + m_drivePID.getSetpoint());
-            // System.out.println("Current speed :" + getSpeed());
-            // System.out.println(driveV);
-        }
     }
     public void ReZero(){
         m_steerEncoder.setPosition(getAbsEncoderPos());   
-        
     }
 }
