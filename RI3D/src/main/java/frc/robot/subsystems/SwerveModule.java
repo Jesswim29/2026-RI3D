@@ -167,7 +167,7 @@ public class SwerveModule {
         config.closedLoop
             // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(
-                DrivetrainConstants.DriveParams.kP/2.0,
+                DrivetrainConstants.DriveParams.kP/4.0,
                 DrivetrainConstants.DriveParams.kI,
                 DrivetrainConstants.DriveParams.kD,
                 DrivetrainConstants.DriveParams.kFF
