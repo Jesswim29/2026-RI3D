@@ -112,7 +112,7 @@ public class Drive extends SubsystemBase {
     }
 
     public void goToAngle(double ang) {
-        System.out.println("Passed angle: " + ang);
+        //System.out.println("Passed angle: " + ang);
 
         SwerveModuleState frontLeftState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
         SwerveModuleState frontRightState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
@@ -126,5 +126,17 @@ public class Drive extends SubsystemBase {
     }
     public double getAngle() {
         return m_frontLeft.getAbsEncoderPos();
+    }
+    public void ZeroWheels(){
+        // Rezeroing Steer wheels??
+        m_frontLeft.ReZero();
+        m_frontRight.ReZero();
+        m_backLeft.ReZero();
+        m_backRight.ReZero();
+
+    }
+    public void printPosition(){
+        //System.out.println(m_frontLeft.getAbsEncoderPos());
+        //System.out.println(m_frontLeft.getPosition());
     }
 }

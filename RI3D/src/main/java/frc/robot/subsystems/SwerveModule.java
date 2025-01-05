@@ -47,6 +47,7 @@ public class SwerveModule {
         m_steerMotor = new SparkMax(steerID, MotorType.kBrushless);       
         m_CANCoder = new CANcoder(encoderID);
         m_encoderOffset = encoderOffset;
+        System.out.println(swerveID + " " + steerID);
 
         m_driveEncoder = m_driveMotor.getEncoder();
         m_steerEncoder = m_steerMotor.getEncoder();
@@ -59,8 +60,11 @@ public class SwerveModule {
 
         m_drivePID = m_driveMotor.getClosedLoopController();
         // m_drivePID = new PIDController(0.1, 0, 0);
-        m_steerPID = new PIDController(2, 0, 0); // TODO (old): set these
+        m_steerPID = new PIDController(.5, 0, 0); // TODO (old): set these
         m_steerPID.enableContinuousInput(-Math.PI, Math.PI);
+        
+        m_steerPID.setTolerance(0.004); //10 degree tolerance
+
 
         m_swerveID = swerveID;
 
@@ -162,11 +166,19 @@ public class SwerveModule {
             .velocityConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)); // in meters per second
         config.closedLoop
             // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(
-                DrivetrainConstants.DriveParams.kP,
+            .pidf(
+                DrivetrainConstants.DriveParams.kP/2.0,
                 DrivetrainConstants.DriveParams.kI,
-                DrivetrainConstants.DriveParams.kD
+                DrivetrainConstants.DriveParams.kD,
+                DrivetrainConstants.DriveParams.kFF
             );
+        config.smartCurrentLimit(60, 30);
+        //0 is front left swerve
+        //2 is back left swerve
+        if (m_swerveID != 1) {
+            config.inverted(true);
+            System.out.println("SwerveID config checked");
+        }
 
         m_driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -177,6 +189,9 @@ public class SwerveModule {
         config.encoder
             .positionConversionFactor((1/12.8) * 2 * Math.PI);
 
+        
+
+        
         m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -189,5 +204,9 @@ public class SwerveModule {
             // System.out.println("Current speed :" + getSpeed());
             // System.out.println(driveV);
         }
+    }
+    public void ReZero(){
+        m_steerEncoder.setPosition(getAbsEncoderPos());   
+        
     }
 }

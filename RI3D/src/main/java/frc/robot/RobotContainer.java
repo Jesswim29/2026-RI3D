@@ -34,50 +34,34 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // m_drive.setDefaultCommand(
-    //   new TeleopDrive(
-    //     () -> m_driver.getLeftY(),
-    //     () -> m_driver.getLeftX(),
-    //     () -> m_driver.getRightX(),
-    //     () -> m_driver.getAButton(),
-    //     m_drive
-    //   )
-    // );
-
+    m_drive.setDefaultCommand(
+      new TeleopDrive(
+        () -> m_driver.getLeftY(),
+        () -> m_driver.getLeftX(),
+        () -> m_driver.getRightX(),
+        () -> m_driver.getAButton(),
+        m_drive
+      )
+    );
+    
     m_controller.a().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
-          m_drive.goToAngle(180);
-          System.out.println("moving to 180");
-      }
-    });
-    m_controller.b().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-          m_drive.goToAngle(90);
-          System.out.println("moving to 90");
-      }
-    });
-    m_controller.y().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-          m_drive.goToAngle(0);
-          System.out.println("moving to 0");
-      }
-    });
-    m_controller.x().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-          m_drive.goToAngle(270);
-          System.out.println("moving to 270");
-      }
-    });
+  
+          m_drive.ZeroWheels();
+          System.out.println("Zeroing the wheels");
+        
+      };
+    }); 
+
+    
     m_controller.start().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
           System.out.println("moving to " + m_drive.getAngle());
       }
     });
+    
   }
 
   /**
