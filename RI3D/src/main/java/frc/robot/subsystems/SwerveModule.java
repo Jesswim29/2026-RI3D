@@ -136,7 +136,7 @@ public class SwerveModule {
         m_steerPID.setSetpoint(angle.getRadians());
     }
 
-    private double getAbsEncoderPos() {
+    public double getAbsEncoderPos() {
         // TODO check on getvalue call
         return Units.degreesToRadians(m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset);
     }

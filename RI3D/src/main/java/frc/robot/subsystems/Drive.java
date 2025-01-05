@@ -124,4 +124,7 @@ public class Drive extends SubsystemBase {
         m_backLeft.setDesiredState(backLeftState);
         m_backRight.setDesiredState(backRightState);
     }
+    public double getAngle() {
+        return m_frontLeft.getAbsEncoderPos();
+    }
 }

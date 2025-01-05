@@ -72,6 +72,12 @@ public class RobotContainer {
           System.out.println("moving to 270");
       }
     });
+    m_controller.start().onTrue(new InstantCommand() {
+      @Override
+      public void initialize() {
+          System.out.println("moving to " + m_drive.getAngle());
+      }
+    });
   }
 
   /**
