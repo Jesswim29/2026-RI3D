@@ -34,7 +34,7 @@ public class SwerveModule {
 
     private SwerveModuleState m_curState;
 
-    private final int m_swerveID;
+    public final int modNum;
 
     /**
      * 
@@ -67,7 +67,7 @@ public class SwerveModule {
         m_steerPID.setTolerance(0.0004); //10 degree tolerance
 
 
-        m_swerveID = swerveID;
+        modNum = swerveID;
 
         configSteer();
         resetEncoders();

@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drive extends SubsystemBase {
-    private SwerveModule m_frontLeft, m_frontRight;
-    private SwerveModule m_backLeft, m_backRight;
+    private SwerveModule[] m_mods;
 
     private final Translation2d m_frontLeftLocation, m_frontRightLocation;
     private final Translation2d m_backLeftLocation, m_backRightLocation;
@@ -22,12 +21,17 @@ public class Drive extends SubsystemBase {
     public Drive(Gyro gyro) {
         m_Gyro = gyro;
 
-        m_frontLeft = new SwerveModule(DrivetrainConstants.frontLeftDriveID, DrivetrainConstants.frontLeftSteerID, DrivetrainConstants.frontLeftCANCoderID, DrivetrainConstants.frontLeftEncoderOffset, 0);
-        m_frontRight = new SwerveModule(DrivetrainConstants.frontRightDriveID, DrivetrainConstants.frontRightSteerID, DrivetrainConstants.frontRightCANCoderID, DrivetrainConstants.frontRightEncoderOffset, 1);
-        m_backLeft = new SwerveModule(DrivetrainConstants.backLeftDriveID, DrivetrainConstants.backLeftSteerID, DrivetrainConstants.backLeftCANCoderID, DrivetrainConstants.backLeftEncoderOffset, 2);
-        m_backRight = new SwerveModule(DrivetrainConstants.backRightDriveID, DrivetrainConstants.backRightSteerID, DrivetrainConstants.backRightCANCoderID, DrivetrainConstants.backRightEncoderOffset, 3);
+        m_mods = new SwerveModule[] {
+            /* front left */
+            new SwerveModule(DrivetrainConstants.frontLeftDriveID, DrivetrainConstants.frontLeftSteerID, DrivetrainConstants.frontLeftCANCoderID, DrivetrainConstants.frontLeftEncoderOffset, 0),
+            /* front right */
+            new SwerveModule(DrivetrainConstants.frontRightDriveID, DrivetrainConstants.frontRightSteerID, DrivetrainConstants.frontRightCANCoderID, DrivetrainConstants.frontRightEncoderOffset, 1),
+            /* back left */
+            new SwerveModule(DrivetrainConstants.backLeftDriveID, DrivetrainConstants.backLeftSteerID, DrivetrainConstants.backLeftCANCoderID, DrivetrainConstants.backLeftEncoderOffset, 2),
+            /* back right */
+            new SwerveModule(DrivetrainConstants.backRightDriveID, DrivetrainConstants.backRightSteerID, DrivetrainConstants.backRightCANCoderID, DrivetrainConstants.backRightEncoderOffset, 3)
+        };
 
-        // TODO (old) double check my negatives :^)
         m_frontLeftLocation = new Translation2d(-DrivetrainConstants.xOffsetMeters, DrivetrainConstants.yOffsetMeters);
         m_frontRightLocation = new Translation2d(DrivetrainConstants.xOffsetMeters, DrivetrainConstants.yOffsetMeters);
         m_backLeftLocation = new Translation2d(-DrivetrainConstants.xOffsetMeters, -DrivetrainConstants.yOffsetMeters);
@@ -43,7 +47,6 @@ public class Drive extends SubsystemBase {
      * @param fieldOriented if true, swerve with respect to the bot
      */
     public void swerve(Translation2d translation, Double rotation, boolean fieldOriented) {
-        // System.out.println("Heading: " + m_Gyro.getGyroAngleClamped());
         ChassisSpeeds speeds;
         if (fieldOriented) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -59,17 +62,11 @@ public class Drive extends SubsystemBase {
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
         
-        moduleStates[0].optimize(new Rotation2d(m_frontLeft.getAngle()));
-        moduleStates[1].optimize(new Rotation2d(m_frontRight.getAngle()));
-        moduleStates[2].optimize(new Rotation2d(m_backLeft.getAngle()));
-        moduleStates[3].optimize(new Rotation2d(m_backRight.getAngle()));
-
-        m_frontLeft.setDesiredState(moduleStates[0]);
-        m_frontRight.setDesiredState(moduleStates[1]);
-        m_backLeft.setDesiredState(moduleStates[2]);
-        m_backRight.setDesiredState(moduleStates[3]);
-
-
+        for (SwerveModule curMod : m_mods) {
+            /* optimize the angle of each module before sending the updated positioning to the module */
+            moduleStates[curMod.modNum].optimize(new Rotation2d(curMod.getAngle()));
+            curMod.setDesiredState(moduleStates[curMod.modNum]);
+        }
     }
 
     /**
@@ -83,36 +80,31 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_frontLeft.updateSteer();
-        m_frontRight.updateSteer();
-        m_backLeft.updateSteer();
-        m_backRight.updateSteer();
+        for (SwerveModule curMod : m_mods)
+        {
+            curMod.updateSteer();
+        }
     }
 
     public void goToAngle(double ang) {
-        //System.out.println("Passed angle: " + ang);
-
-        SwerveModuleState frontLeftState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
-        SwerveModuleState frontRightState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
-        SwerveModuleState backLeftState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
-        SwerveModuleState backRightState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
-
-        m_frontLeft.setDesiredState(frontLeftState);
-        m_frontRight.setDesiredState(frontRightState);
-        m_backLeft.setDesiredState(backLeftState);
-        m_backRight.setDesiredState(backRightState);
+        for (SwerveModule curMod : m_mods)
+        {
+            curMod.setDesiredState(new SwerveModuleState(0d, Rotation2d.fromDegrees(ang)));
+        }
     }
+    
     public double getAngle() {
-        return m_frontLeft.getAbsEncoderPos();
+        return m_mods[0].getAbsEncoderPos();
     }
+
     public void ZeroWheels(){
         // Rezeroing Steer wheels??
-        m_frontLeft.ReZero();
-        m_frontRight.ReZero();
-        m_backLeft.ReZero();
-        m_backRight.ReZero();
-
+        for (SwerveModule curMod : m_mods)
+        {
+            curMod.ReZero();
+        }
     }
+
     public void printPosition(){
         //System.out.println(m_frontLeft.getAbsEncoderPos());
         //System.out.println(m_frontLeft.getPosition());
