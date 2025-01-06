@@ -42,15 +42,14 @@ public class RobotContainer {
 
     m_controller.a().onTrue(new InstantCommand(() -> new ElevateDown(m_elevator)) {});
     m_controller.b().onTrue(new InstantCommand(() -> new ElevateUp(m_elevator)) {});
-    // m_drive.setDefaultCommand(
-    //   new TeleopDrive(
-    //     () -> m_driver.getLeftY(),
-    //     () -> -m_driver.getLeftX(),
-    //     () -> m_driver.getRightX(),
-    //     () -> m_driver.getAButton(),
-    //     m_drive
-    //   )
-    // );
+    m_drive.setDefaultCommand(
+      new TeleopDrive(
+        () -> m_driver.getLeftY(),
+        () -> -m_driver.getLeftX(),
+        () -> m_driver.getRightX(),
+        m_drive
+      )
+    );
     
     m_controller.x().onTrue(new InstantCommand() {
       @Override
