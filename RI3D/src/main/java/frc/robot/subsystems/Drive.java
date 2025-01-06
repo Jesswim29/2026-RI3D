@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drive extends SubsystemBase {
@@ -57,14 +57,17 @@ public class Drive extends SubsystemBase {
                 translation.getX(),
                 translation.getY(),
                 rotation,
-                new Rotation2d(m_Gyro.getGyroAngleClamped())
+                Rotation2d.fromDegrees(m_Gyro.getGyroAngleClamped())
             );
         } else {
+
             speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         }
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
+        
         moduleStates[0].optimize(new Rotation2d(m_frontLeft.getAngle()));
         moduleStates[1].optimize(new Rotation2d(m_frontRight.getAngle()));
         moduleStates[2].optimize(new Rotation2d(m_backLeft.getAngle()));
@@ -74,6 +77,8 @@ public class Drive extends SubsystemBase {
         m_frontRight.setDesiredState(moduleStates[1]);
         m_backLeft.setDesiredState(moduleStates[2]);
         m_backRight.setDesiredState(moduleStates[3]);
+
+
     }
 
     /**

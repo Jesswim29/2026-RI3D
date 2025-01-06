@@ -64,7 +64,7 @@ public class SwerveModule {
         m_steerPID = new PIDController(.5, 0, 0); // TODO (old): set these
         m_steerPID.enableContinuousInput(-Math.PI, Math.PI);
         
-        m_steerPID.setTolerance(0.004); //10 degree tolerance
+        m_steerPID.setTolerance(0.0004); //10 degree tolerance
 
 
         m_swerveID = swerveID;
@@ -168,7 +168,7 @@ public class SwerveModule {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(
-                DrivetrainConstants.DriveParams.kP/4.0,
+                DrivetrainConstants.DriveParams.kP,
                 DrivetrainConstants.DriveParams.kI,
                 DrivetrainConstants.DriveParams.kD,
                 DrivetrainConstants.DriveParams.kFF
@@ -176,10 +176,10 @@ public class SwerveModule {
         config.smartCurrentLimit(60, 30);
         //0 is front left swerve
         //2 is back left swerve
-        if (m_swerveID != 1) {
+        //if (m_swerveID != 1) {
             config.inverted(true);
             System.out.println("SwerveID config checked");
-        }
+        //}
 
         m_driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Gyro m_gyro = new Gyro();
+  public final Gyro m_gyro = new Gyro();
   private final Drive m_drive = new Drive(m_gyro);
 
   private final XboxController m_driver = new XboxController(Constants.kDriveController);
@@ -37,7 +37,7 @@ public class RobotContainer {
     m_drive.setDefaultCommand(
       new TeleopDrive(
         () -> m_driver.getLeftY(),
-        () -> m_driver.getLeftX(),
+        () -> -m_driver.getLeftX(),
         () -> m_driver.getRightX(),
         () -> m_driver.getAButton(),
         m_drive
@@ -53,6 +53,13 @@ public class RobotContainer {
         
       };
     }); 
+    m_controller.y().onTrue(new InstantCommand(){
+      @Override
+      public void initialize() {
+        m_gyro.zeroGyro();
+
+      };
+    });
 
     
     m_controller.start().onTrue(new InstantCommand() {

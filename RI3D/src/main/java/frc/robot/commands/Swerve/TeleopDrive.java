@@ -51,7 +51,7 @@ public class TeleopDrive extends Command {
     // xVal).times(DrivetrainConstants.maxSpeed), new Rotation2d(rotVal),
     // m_robotCentric.getAsBoolean());
     m_drive.swerve(new Translation2d(xVal, yVal).times(DrivetrainConstants.maxSpeed),
-        rotVal * DrivetrainConstants.maxTurningSpeed, true);
+        rotVal * DrivetrainConstants.maxTurningSpeed, false); // TODO: Get this to work
   }
 
   // Called once the command ends or is interrupted.

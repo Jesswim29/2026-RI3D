@@ -23,34 +23,34 @@ public final class Constants {
 
     public static final class DrivetrainConstants {
         // public static final double maxSpeed = Units.feetToMeters(15.1);
-        public static final double maxSpeed = Units.feetToMeters(30);
+        public static final double maxSpeed = Units.feetToMeters(10);
         public static final double maxTurningSpeed = 4.5;
 
         public static final int frontLeftDriveID = 7;
         public static final int frontLeftSteerID = 1;
         public static final int frontLeftCANCoderID = 21;
-        public static final double frontLeftEncoderOffset = 0.25;
+        public static final double frontLeftEncoderOffset = 0.498535 -.25;
 
         public static final int frontRightDriveID = 8;
         public static final int frontRightSteerID = 6;
         public static final int frontRightCANCoderID = 23;
-        public static final double frontRightEncoderOffset = 0.25;
+        public static final double frontRightEncoderOffset = 0.000977 - 0.25;
 
         public static final int backLeftDriveID = 3;
         public static final int backLeftSteerID = 4;
         public static final int backLeftCANCoderID = 20;
-        public static final double backLeftEncoderOffset = 0.25;
+        public static final double backLeftEncoderOffset = -0.497803 + 0.75 ;
 
         public static final int backRightDriveID = 5;
         public static final int backRightSteerID = 2;
         public static final int backRightCANCoderID = 22;
-        public static final double backRightEncoderOffset = 0.25;
+        public static final double backRightEncoderOffset = 0.498535 - 0.25;
 
         public static final double xOffsetMeters = Units.inchesToMeters(12.5);
         public static final double yOffsetMeters = Units.inchesToMeters(12.5);
 
         public static final class DriveParams {
-            public static final double kP = 0.1;
+            public static final double kP = 0.1/4.0;
             public static final double kI = 0;
             public static final double kD = 0;
             public static final double kFF = 1/473.0;
