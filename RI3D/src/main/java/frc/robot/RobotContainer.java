@@ -30,7 +30,7 @@ public class RobotContainer {
   private final Elevator m_elevator = new Elevator();
 
   private final XboxController m_driver = new XboxController(Constants.kDriveController);
-  private final CommandXboxController m_controller = new CommandXboxController(Constants.kDriveController);
+  private final CommandXboxController m_controller = new CommandXboxController(Constants.kButtonController);
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

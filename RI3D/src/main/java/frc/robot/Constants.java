@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     public static final int pigeonID = 5;
+    public static final int kButtonController = 0;
     public static final int kDriveController = 1;
     public static final double kDeadzone = 0.05;
 
