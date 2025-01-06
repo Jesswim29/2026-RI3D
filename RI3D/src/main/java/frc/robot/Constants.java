@@ -49,6 +49,10 @@ public final class Constants {
         public static final double xOffsetMeters = Units.inchesToMeters(12.5);
         public static final double yOffsetMeters = Units.inchesToMeters(12.5);
 
+        public static final class ElevatorConstants{
+            public static final double elevatorSpeed = 0.15;
+            public static final int elevatorMotorID = 0; // TODO assign motor ID
+        }
         public static final class DriveParams {
             public static final double kP = 0.1;
             public static final double kI = 0;

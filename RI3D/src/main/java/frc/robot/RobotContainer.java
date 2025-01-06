@@ -6,8 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.ElevateDown;
+import frc.robot.commands.ElevateUp;
 import frc.robot.commands.Swerve.TeleopDrive;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Gyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Gyro m_gyro = new Gyro();
   private final Drive m_drive = new Drive(m_gyro);
+  private final Elevator m_elevator = new Elevator();
 
   private final XboxController m_driver = new XboxController(Constants.kDriveController);
   private final CommandXboxController m_controller = new CommandXboxController(Constants.kDriveController);
@@ -44,34 +48,15 @@ public class RobotContainer {
     //   )
     // );
 
-    m_controller.a().onTrue(new InstantCommand() {
+    m_controller.x().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
           m_drive.goToAngle(180);
           System.out.println("moving to 180");
       }
     });
-    m_controller.b().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-          m_drive.goToAngle(90);
-          System.out.println("moving to 90");
-      }
-    });
-    m_controller.y().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-          m_drive.goToAngle(0);
-          System.out.println("moving to 0");
-      }
-    });
-    m_controller.x().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-          m_drive.goToAngle(270);
-          System.out.println("moving to 270");
-      }
-    });
+    m_controller.a().onTrue(new InstantCommand(() -> new ElevateDown(m_elevator)) {});
+    m_controller.b().onTrue(new InstantCommand(() -> new ElevateUp(m_elevator)) {});
     m_controller.start().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
