@@ -14,8 +14,7 @@ public class ElevateDown extends InstantCommand{
     @Override
     public void initialize() {
 
-        m_elevator.setGoal(0); 
-        m_elevator.enable(); 
+        m_elevator.setPositionGoal(0);
     }
 
     
