@@ -81,7 +81,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    System.out.println("Throwing it at the wall " + m_robotContainer.m_gyro.getGyroAngleClamped());
+  }
 
   @Override
   public void testInit() {

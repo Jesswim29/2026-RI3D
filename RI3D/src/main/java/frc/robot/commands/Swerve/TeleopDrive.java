@@ -7,6 +7,8 @@ package frc.robot.commands.Swerve;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.RobotCentric;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +24,8 @@ public class TeleopDrive extends Command {
   private BooleanSupplier m_robotCentric; // Used to store if using robot centric drive or not.
   private Drive m_drive;
 
-  public TeleopDrive(DoubleSupplier y, DoubleSupplier x, DoubleSupplier rot, BooleanSupplier isRobotCentric, Drive drive) {
+  public TeleopDrive(DoubleSupplier y, DoubleSupplier x, DoubleSupplier rot, BooleanSupplier isRobotCentric,
+      Drive drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_y = y;
     m_x = x;
@@ -34,7 +37,8 @@ public class TeleopDrive extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -43,13 +47,17 @@ public class TeleopDrive extends Command {
     var xVal = MathUtil.applyDeadband(m_x.getAsDouble(), Constants.kDeadzone);
     var rotVal = MathUtil.applyDeadband(m_rot.getAsDouble(), Constants.kDeadzone);
 
-    //m_drive.swerve(new Translation2d(yVal, xVal).times(DrivetrainConstants.maxSpeed), new Rotation2d(rotVal), m_robotCentric.getAsBoolean());
-    m_drive.swerve(new Translation2d(xVal, yVal).times(DrivetrainConstants.maxSpeed), rotVal * DrivetrainConstants.maxTurningSpeed, true);
+    // m_drive.swerve(new Translation2d(yVal,
+    // xVal).times(DrivetrainConstants.maxSpeed), new Rotation2d(rotVal),
+    // m_robotCentric.getAsBoolean());
+    m_drive.swerve(new Translation2d(xVal, yVal).times(DrivetrainConstants.maxSpeed),
+        rotVal * DrivetrainConstants.maxTurningSpeed, false); // TODO: Get this to work
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

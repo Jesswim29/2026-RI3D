@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Gyro m_gyro = new Gyro();
+  public final Gyro m_gyro = new Gyro();
   private final Drive m_drive = new Drive(m_gyro);
   private final Elevator m_elevator = new Elevator();
 
@@ -38,31 +38,45 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+
+
+    m_controller.a().onTrue(new InstantCommand(() -> new ElevateDown(m_elevator)) {});
+    m_controller.b().onTrue(new InstantCommand(() -> new ElevateUp(m_elevator)) {});
     // m_drive.setDefaultCommand(
     //   new TeleopDrive(
     //     () -> m_driver.getLeftY(),
-    //     () -> m_driver.getLeftX(),
+    //     () -> -m_driver.getLeftX(),
     //     () -> m_driver.getRightX(),
     //     () -> m_driver.getAButton(),
     //     m_drive
     //   )
     // );
-
+    
     m_controller.x().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
-          m_drive.goToAngle(180);
-          System.out.println("moving to 180");
-      }
+  
+          m_drive.ZeroWheels();
+          System.out.println("Zeroing the wheels");
+        
+      };
+    }); 
+    m_controller.y().onTrue(new InstantCommand(){
+      @Override
+      public void initialize() {
+        m_gyro.zeroGyro();
+
+      };
     });
-    m_controller.a().onTrue(new InstantCommand(() -> new ElevateDown(m_elevator)) {});
-    m_controller.b().onTrue(new InstantCommand(() -> new ElevateUp(m_elevator)) {});
+
+    
     m_controller.start().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
           System.out.println("moving to " + m_drive.getAngle());
       }
     });
+    
   }
 
   /**

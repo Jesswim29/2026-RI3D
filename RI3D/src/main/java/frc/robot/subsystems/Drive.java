@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drive extends SubsystemBase {
@@ -32,7 +32,7 @@ public class Drive extends SubsystemBase {
         m_backLeft = new SwerveModule(DrivetrainConstants.backLeftDriveID, DrivetrainConstants.backLeftSteerID, DrivetrainConstants.backLeftCANCoderID, DrivetrainConstants.backLeftEncoderOffset, 2);
         m_backRight = new SwerveModule(DrivetrainConstants.backRightDriveID, DrivetrainConstants.backRightSteerID, DrivetrainConstants.backRightCANCoderID, DrivetrainConstants.backRightEncoderOffset, 3);
 
-        // TODO double check my negatives :^)
+        // TODO (old) double check my negatives :^)
         m_frontLeftLocation = new Translation2d(-DrivetrainConstants.xOffsetMeters, DrivetrainConstants.yOffsetMeters);
         m_frontRightLocation = new Translation2d(DrivetrainConstants.xOffsetMeters, DrivetrainConstants.yOffsetMeters);
         m_backLeftLocation = new Translation2d(-DrivetrainConstants.xOffsetMeters, -DrivetrainConstants.yOffsetMeters);
@@ -57,14 +57,17 @@ public class Drive extends SubsystemBase {
                 translation.getX(),
                 translation.getY(),
                 rotation,
-                new Rotation2d(m_Gyro.getGyroAngleClamped())
+                Rotation2d.fromDegrees(m_Gyro.getGyroAngleClamped())
             );
         } else {
+
             speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         }
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
+        
         moduleStates[0].optimize(new Rotation2d(m_frontLeft.getAngle()));
         moduleStates[1].optimize(new Rotation2d(m_frontRight.getAngle()));
         moduleStates[2].optimize(new Rotation2d(m_backLeft.getAngle()));
@@ -74,6 +77,8 @@ public class Drive extends SubsystemBase {
         m_frontRight.setDesiredState(moduleStates[1]);
         m_backLeft.setDesiredState(moduleStates[2]);
         m_backRight.setDesiredState(moduleStates[3]);
+
+
     }
 
     /**
@@ -112,7 +117,7 @@ public class Drive extends SubsystemBase {
     }
 
     public void goToAngle(double ang) {
-        System.out.println("Passed angle: " + ang);
+        //System.out.println("Passed angle: " + ang);
 
         SwerveModuleState frontLeftState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
         SwerveModuleState frontRightState = new SwerveModuleState(0d, new Rotation2d(Units.degreesToRadians(ang)));
@@ -126,5 +131,17 @@ public class Drive extends SubsystemBase {
     }
     public double getAngle() {
         return m_frontLeft.getAbsEncoderPos();
+    }
+    public void ZeroWheels(){
+        // Rezeroing Steer wheels??
+        m_frontLeft.ReZero();
+        m_frontRight.ReZero();
+        m_backLeft.ReZero();
+        m_backRight.ReZero();
+
+    }
+    public void printPosition(){
+        //System.out.println(m_frontLeft.getAbsEncoderPos());
+        //System.out.println(m_frontLeft.getPosition());
     }
 }
