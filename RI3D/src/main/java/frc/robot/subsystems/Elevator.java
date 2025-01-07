@@ -28,41 +28,23 @@ public class Elevator extends SubsystemBase {
     private final ProfiledPIDController m_controller;
     
     public Elevator() {
-        // TODO: Use trapezoid profile? 
-        m_controller = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(3600 * ElevatorConstants.elevatorSpeed, 3000 * ElevatorConstants.elevatorSpeed));
+        // TODO: Tune trapezoid profile
+        m_controller = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(3600*Math.PI/180 * ElevatorConstants.elevatorSpeed, 3000*Math.PI/180 * ElevatorConstants.elevatorSpeed));
         
         m_elevator = new SparkMax(ElevatorConstants.elevatorMotorID, MotorType.kBrushless);
         m_internalEncoder = m_elevator.getEncoder();
         m_externalEncoder = m_elevator.getAlternateEncoder();
 
+        configMotor();
+
         // TODO set range and tolerance
         m_controller.enableContinuousInput(0, ElevatorConstants.maxHeight);
-        // m_controller.setTolerance
+        // m_controller.setTolerance()
 
         m_internalEncoder.setPosition(0);
         m_externalEncoder.setPosition(0);
         
-        var config = new SparkMaxConfig();
-
-        config.idleMode(DrivetrainConstants.DriveParams.kIdleMode);
-        config.encoder // TODO: Setup the desired units we are using <---- DO NOT FORGET UNITS
-            .positionConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16)))
-            .velocityConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16) / 60)); // in meters per second
-        config.alternateEncoder
-            .positionConversionFactor(1)
-            .velocityConversionFactor(1);
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder) // TODO: Could use alternate encoder?
-            .pidf(
-                ElevatorConstants.kP,
-                ElevatorConstants.kI,
-                ElevatorConstants.kD,
-                ElevatorConstants.kFF
-            );
-        // config.smartCurrentLimit(60, 30);
-        config.inverted(false);
-
-        m_elevator.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_controller.reset(0);
     }
 
     /**
@@ -91,15 +73,29 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_elevator.set(m_controller.calculate(m_internalEncoder.getPosition()));
+        m_elevator.set(m_controller.calculate(m_internalEncoder.getPosition(),m_controller.getSetpoint()));
     }
 
     private void configMotor() {
-        // TODO
         var config = new SparkMaxConfig();
 
+        config.idleMode(DrivetrainConstants.DriveParams.kIdleMode);
+        config.encoder // TODO: Setup the desired units we are using <---- DO NOT FORGET UNITS
+            .positionConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16)))
+            .velocityConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16) / 60)); // in meters per second
         config.alternateEncoder
-            .positionConversionFactor(2 * Math.PI);
+            .positionConversionFactor((((Units.inchesToMeters(0.5) * Math.PI) / 16)))
+            .velocityConversionFactor((((Units.inchesToMeters(0.5) * Math.PI) / 16) / 60)); // in meters per second
+        config.closedLoop
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder) // TODO: Could use alternate encoder?
+            .pidf(
+                ElevatorConstants.kP,
+                ElevatorConstants.kI,
+                ElevatorConstants.kD,
+                ElevatorConstants.kFF
+            );
+        // config.smartCurrentLimit(60, 30);
+        config.inverted(false);
 
         m_elevator.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

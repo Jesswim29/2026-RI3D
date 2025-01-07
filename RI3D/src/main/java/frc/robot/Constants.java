@@ -56,7 +56,7 @@ public final class Constants {
             public static final double kD = 0;
             public static final double kFF = 0;
             public static final double elevatorSpeed = 0.15;
-            public static final int elevatorMotorID = 0; // TODO assign motor ID
+            public static final int elevatorMotorID = 9;
             public static final double maxHeight = 26.0;
         }
 
