@@ -12,7 +12,7 @@ public class ElevateDown extends InstantCommand{
     
     @Override
     public void initialize() {
-        System.out.println("AHHHHHHHHHHHHHH THE BEES THEY'RE IN MY EARS AHHHHHH");
+        // System.out.println("AHHHHHHHHHHHHHH THE BEES THEY'RE IN MY EARS AHHHHHH");
         m_elevator.setPositionGoal(0);
     }
 }

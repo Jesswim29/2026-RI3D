@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -117,7 +118,7 @@ public class SwerveModule {
      * @param state
      */
     public void setSpeed(SwerveModuleState state) {
-        m_drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 0, m_driveFF.calculate(state.speedMetersPerSecond));
+        m_drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(state.speedMetersPerSecond));
         // m_drivePID.setSetpoint(state.speedMetersPerSecond);
     }
 

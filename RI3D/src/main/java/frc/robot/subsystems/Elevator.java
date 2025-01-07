@@ -25,10 +25,12 @@ public class Elevator extends SubsystemBase {
     private final RelativeEncoder m_internalEncoder;
     private final RelativeEncoder m_externalEncoder;
     private final ProfiledPIDController m_controller;
+
+    private int messageNum = 0;
     
     public Elevator() {
         // TODO: Tune trapezoid profile
-        m_controller = new ProfiledPIDController(ElevatorParams.kP, ElevatorParams.kI, ElevatorParams.kD, new TrapezoidProfile.Constraints(3600*Math.PI/180 * ElevatorParams.elevatorSpeed, 3000*Math.PI/180 * ElevatorParams.elevatorSpeed));
+        m_controller = new ProfiledPIDController(ElevatorParams.kP, ElevatorParams.kI, ElevatorParams.kD, new TrapezoidProfile.Constraints(60 * ElevatorParams.elevatorSpeed, 50 * ElevatorParams.elevatorSpeed));
         
         m_elevator = new SparkMax(ElevatorParams.elevatorMotorID, MotorType.kBrushless);
         m_internalEncoder = m_elevator.getEncoder();
@@ -58,16 +60,41 @@ public class Elevator extends SubsystemBase {
         }
     }
 
+    public void up()
+    {
+        m_elevator.set(ElevatorParams.elevatorSpeed);
+    }
+
+    public void down()
+    {
+        m_elevator.set(-ElevatorParams.elevatorSpeed);
+    }
+
+    public void stop()
+    {
+        m_elevator.set(0);
+    }
+
     public double getPosition()
     {
-        return m_internalEncoder.getPosition();
+        return m_externalEncoder.getPosition();
     }
 
     @Override
     public void periodic() {
         var output = m_controller.calculate(m_externalEncoder.getPosition());
-        // System.out.printf("attempting to output %f\n", output);
-        m_elevator.setVoltage(output);
+
+        if (messageNum >= 50)
+        {
+            System.out.printf("attempting to output %f\n", output);
+            messageNum = 0;
+        }
+        else
+        {
+            ++messageNum;
+        }
+
+        // m_elevator.set(output);
     }
 
     private void configMotor() {
@@ -75,13 +102,13 @@ public class Elevator extends SubsystemBase {
 
         config.idleMode(ElevatorParams.kIdleMode);
         config.encoder // TODO: Setup the desired units we are using <---- DO NOT FORGET UNITS
-            .positionConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16)))
-            .velocityConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16) / 60)); // in meters per second
+            .positionConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 25)))
+            .velocityConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 25) / 60)); // in meters per second
         config.alternateEncoder
-            .positionConversionFactor((((Units.inchesToMeters(0.5) * Math.PI) / 16)))
-            .velocityConversionFactor((((Units.inchesToMeters(0.5) * Math.PI) / 16) / 60)); // in meters per second
+            .positionConversionFactor((((Units.inchesToMeters(0.5) * Math.PI)))) // TODO: Remove the 16
+            .velocityConversionFactor((((Units.inchesToMeters(0.5) * Math.PI)) / 60)); // in meters per second
         config.closedLoop
-            .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder) // TODO: Could use alternate encoder?
+            .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
             .pidf(
                 ElevatorParams.kP,
                 ElevatorParams.kI,
@@ -89,7 +116,7 @@ public class Elevator extends SubsystemBase {
                 ElevatorParams.kFF
             );
         // config.smartCurrentLimit(60, 30);
-        config.inverted(false);
+        config.inverted(true); // True is the correct way
 
         m_elevator.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

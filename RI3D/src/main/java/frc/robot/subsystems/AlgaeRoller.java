@@ -40,7 +40,7 @@ public class AlgaeRoller extends SubsystemBase{
         .positionConversionFactor((Units.inchesToMeters(4) * Math.PI))   // TODO: get diameter
         .velocityConversionFactor(((Units.inchesToMeters(4) * Math.PI) / 60)); // in meters per second
         // config.smartCurrentLimit(60, 30);
-        // config.inverted(false);
+        config.inverted(true);
 
         m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }    
