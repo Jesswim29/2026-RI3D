@@ -40,11 +40,11 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    m_controller.a().onTrue(new InstantCommand(() -> new ElevateDown(m_elevator)) {});
-    m_controller.b().onTrue(new InstantCommand(() -> new ElevateUp(m_elevator)) {});
-    m_controller.y().onTrue(new InstantCommand(() -> new StartRoll(m_roller)) {});
-    m_controller.rightTrigger().onTrue(new InstantCommand(() -> new PitchOut(m_pitcher)) {});
-    m_controller.leftTrigger().onTrue(new InstantCommand(() -> new PitchIn(m_pitcher)) {});
+    m_controller.a().onTrue(new ElevateDown(m_elevator));
+    m_controller.b().onTrue(new ElevateUp(m_elevator));
+    m_controller.y().whileTrue(new Roller(m_roller));
+    m_controller.rightTrigger().whileTrue(new PitcherOut(m_pitcher));
+    m_controller.leftTrigger().whileTrue(new PitcherIn(m_pitcher));
     
     m_drive.setDefaultCommand(
       new TeleopDrive(

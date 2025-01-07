@@ -36,10 +36,6 @@ public class Elevator extends SubsystemBase {
 
         configMotor();
 
-        // TODO set range and tolerance
-        m_controller.enableContinuousInput(0, ElevatorParams.maxHeight);
-        // m_controller.setTolerance()
-
         m_internalEncoder.setPosition(0);
         m_externalEncoder.setPosition(0);
         
@@ -58,20 +54,20 @@ public class Elevator extends SubsystemBase {
         }
         else
         {
-            // TODO set position
             m_controller.setGoal(pos);
         }
     }
 
     public double getPosition()
     {
-        // TODO implement
         return m_internalEncoder.getPosition();
     }
 
     @Override
     public void periodic() {
-        m_elevator.set(m_controller.calculate(m_internalEncoder.getPosition(),m_controller.getSetpoint()));
+        var output = m_controller.calculate(m_externalEncoder.getPosition());
+        // System.out.printf("attempting to output %f\n", output);
+        m_elevator.setVoltage(output);
     }
 
     private void configMotor() {
@@ -85,7 +81,7 @@ public class Elevator extends SubsystemBase {
             .positionConversionFactor((((Units.inchesToMeters(0.5) * Math.PI) / 16)))
             .velocityConversionFactor((((Units.inchesToMeters(0.5) * Math.PI) / 16) / 60)); // in meters per second
         config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder) // TODO: Could use alternate encoder?
+            .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder) // TODO: Could use alternate encoder?
             .pidf(
                 ElevatorParams.kP,
                 ElevatorParams.kI,

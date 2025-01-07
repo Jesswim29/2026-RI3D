@@ -85,7 +85,7 @@ public final class Constants {
 
         public static final class RollerParams {
             public static final double rollerSpeed = 0;
-            public static final int rollerMotorID = 0; // TODO: Set motor ID
+            public static final int rollerMotorID = 13; // TODO: Set motor ID
             public static final IdleMode kIdleMode = IdleMode.kBrake;
         }
     }
