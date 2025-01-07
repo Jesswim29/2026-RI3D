@@ -6,16 +6,12 @@ import frc.robot.subsystems.Elevator;
 public class ElevateDown extends InstantCommand{
     private final Elevator m_elevator;
     public ElevateDown(Elevator elevator) {
-
          m_elevator = elevator;
          addRequirements(m_elevator);
     }
     
     @Override
     public void initialize() {
-
         m_elevator.setPositionGoal(0);
     }
-
-    
 }

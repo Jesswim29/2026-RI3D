@@ -6,9 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ElevateDown;
-import frc.robot.commands.ElevateUp;
+import frc.robot.commands.*;
 import frc.robot.commands.Swerve.TeleopDrive;
+import frc.robot.subsystems.AlgaeRoller;
+import frc.robot.subsystems.CoralPitcherinator;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Gyro;
@@ -28,20 +29,23 @@ public class RobotContainer {
   public final Gyro m_gyro = new Gyro();
   private final Drive m_drive = new Drive(m_gyro);
   private final Elevator m_elevator = new Elevator();
+  private final AlgaeRoller m_roller = new AlgaeRoller();
+  private final CoralPitcherinator m_pitcher = new CoralPitcherinator();
 
   private final XboxController m_driver = new XboxController(Constants.kDriveController);
   private final CommandXboxController m_controller = new CommandXboxController(Constants.kButtonController);
-
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-
-
     m_controller.a().onTrue(new InstantCommand(() -> new ElevateDown(m_elevator)) {});
     m_controller.b().onTrue(new InstantCommand(() -> new ElevateUp(m_elevator)) {});
+    m_controller.y().onTrue(new InstantCommand(() -> new StartRoll(m_roller)) {});
+    m_controller.rightTrigger().onTrue(new InstantCommand(() -> new PitchOut(m_pitcher)) {});
+    m_controller.leftTrigger().onTrue(new InstantCommand(() -> new PitchIn(m_pitcher)) {});
+    
     m_drive.setDefaultCommand(
       new TeleopDrive(
         () -> m_driver.getLeftY(),
@@ -60,13 +64,13 @@ public class RobotContainer {
         
       };
     }); 
-    m_controller.y().onTrue(new InstantCommand(){
-      @Override
-      public void initialize() {
-        m_gyro.zeroGyro();
+    // m_controller.y().onTrue(new InstantCommand(){
+    //   @Override
+    //   public void initialize() {
+    //     m_gyro.zeroGyro();
 
-      };
-    });
+    //   };
+    // });
 
     
     m_controller.start().onTrue(new InstantCommand() {

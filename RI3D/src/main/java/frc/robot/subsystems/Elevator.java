@@ -10,8 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.DrivetrainConstants.ElevatorConstants;
+import frc.robot.Constants.DrivetrainConstants.ElevatorParams;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -29,16 +28,16 @@ public class Elevator extends SubsystemBase {
     
     public Elevator() {
         // TODO: Tune trapezoid profile
-        m_controller = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(3600*Math.PI/180 * ElevatorConstants.elevatorSpeed, 3000*Math.PI/180 * ElevatorConstants.elevatorSpeed));
+        m_controller = new ProfiledPIDController(ElevatorParams.kP, ElevatorParams.kI, ElevatorParams.kD, new TrapezoidProfile.Constraints(3600*Math.PI/180 * ElevatorParams.elevatorSpeed, 3000*Math.PI/180 * ElevatorParams.elevatorSpeed));
         
-        m_elevator = new SparkMax(ElevatorConstants.elevatorMotorID, MotorType.kBrushless);
+        m_elevator = new SparkMax(ElevatorParams.elevatorMotorID, MotorType.kBrushless);
         m_internalEncoder = m_elevator.getEncoder();
         m_externalEncoder = m_elevator.getAlternateEncoder();
 
         configMotor();
 
         // TODO set range and tolerance
-        m_controller.enableContinuousInput(0, ElevatorConstants.maxHeight);
+        m_controller.enableContinuousInput(0, ElevatorParams.maxHeight);
         // m_controller.setTolerance()
 
         m_internalEncoder.setPosition(0);
@@ -49,14 +48,13 @@ public class Elevator extends SubsystemBase {
 
     /**
      * Set the position of the elevator
-     * 
      * @param pos the position in inches
      */
     public void setPositionGoal(double pos) {
         // TODO: Remove this check as redundance with enableContinuousInput?
-        if (pos > ElevatorConstants.maxHeight)
+        if (pos > ElevatorParams.maxHeight)
         {
-            System.out.printf("cannot set position to height %f - max height is %f!\n", pos, ElevatorConstants.maxHeight);
+            System.out.printf("cannot set position to height %f - max height is %f!\n", pos, ElevatorParams.maxHeight);
         }
         else
         {
@@ -79,7 +77,7 @@ public class Elevator extends SubsystemBase {
     private void configMotor() {
         var config = new SparkMaxConfig();
 
-        config.idleMode(DrivetrainConstants.DriveParams.kIdleMode);
+        config.idleMode(ElevatorParams.kIdleMode);
         config.encoder // TODO: Setup the desired units we are using <---- DO NOT FORGET UNITS
             .positionConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16)))
             .velocityConversionFactor((((Units.inchesToMeters(1.9) * Math.PI) / 16) / 60)); // in meters per second
@@ -89,10 +87,10 @@ public class Elevator extends SubsystemBase {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder) // TODO: Could use alternate encoder?
             .pidf(
-                ElevatorConstants.kP,
-                ElevatorConstants.kI,
-                ElevatorConstants.kD,
-                ElevatorConstants.kFF
+                ElevatorParams.kP,
+                ElevatorParams.kI,
+                ElevatorParams.kD,
+                ElevatorParams.kFF
             );
         // config.smartCurrentLimit(60, 30);
         config.inverted(false);
