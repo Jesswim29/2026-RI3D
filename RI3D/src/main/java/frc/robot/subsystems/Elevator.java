@@ -27,6 +27,8 @@ public class Elevator extends SubsystemBase {
     private final ProfiledPIDController m_controller;
 
     private int messageNum = 0;
+    private boolean overrideFlag = false;
+    private double outputSpeed = 0;
     
     public Elevator() {
         // TODO: Tune trapezoid profile
@@ -60,19 +62,22 @@ public class Elevator extends SubsystemBase {
         }
     }
 
-    public void up()
+    public void overrideUp()
     {
-        m_elevator.set(ElevatorParams.elevatorSpeed);
+        outputSpeed = ElevatorParams.elevatorSpeed;
+        overrideFlag = true;
     }
 
-    public void down()
+    public void overrideDown()
     {
-        m_elevator.set(-ElevatorParams.elevatorSpeed);
+        outputSpeed = -ElevatorParams.elevatorSpeed;
+        overrideFlag = true;
     }
 
     public void stop()
     {
-        m_elevator.set(0);
+        outputSpeed = 0;
+        overrideFlag = false;
     }
 
     public double getPosition()
@@ -82,11 +87,14 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        var output = m_controller.calculate(m_externalEncoder.getPosition());
+        if(!overrideFlag){
+            outputSpeed = m_controller.calculate(m_externalEncoder.getPosition());
+        }
 
         if (messageNum >= 50)
         {
-            System.out.printf("attempting to output %f\n", output);
+            System.out.printf("attempting to output %f\n", outputSpeed);
+            System.out.printf("Encoder: %.4f", m_externalEncoder.getPosition());
             messageNum = 0;
         }
         else
@@ -94,7 +102,7 @@ public class Elevator extends SubsystemBase {
             ++messageNum;
         }
 
-        // m_elevator.set(output);
+        m_elevator.set(outputSpeed);
     }
 
     private void configMotor() {

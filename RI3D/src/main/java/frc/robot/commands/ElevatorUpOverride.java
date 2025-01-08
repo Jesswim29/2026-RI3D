@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ElevatorUp extends Command {
+public class ElevatorUpOverride extends Command {
   /** Creates a new ElevatorUp. */
   private final Elevator m_elevator;
-  public ElevatorUp(Elevator elevator) {
+  public ElevatorUpOverride(Elevator elevator) {
         m_elevator = elevator;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_elevator);
@@ -25,7 +25,7 @@ public class ElevatorUp extends Command {
   @Override
   public void execute()
   {
-    m_elevator.up();
+    m_elevator.overrideUp();
   }
 
   // Called once the command ends or is interrupted.

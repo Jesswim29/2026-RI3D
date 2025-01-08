@@ -42,8 +42,8 @@ public class RobotContainer {
 
     m_controller.a().onTrue(new ElevateDown(m_elevator));
     m_controller.b().onTrue(new ElevateUp(m_elevator));
-    m_controller.povUp().whileTrue(new ElevatorUp(m_elevator));
-    m_controller.povDown().whileTrue(new ElevatorDown(m_elevator));
+    m_controller.povUp().whileTrue(new ElevatorUpOverride(m_elevator));
+    m_controller.povDown().whileTrue(new ElevatorDownOverride(m_elevator));
     m_controller.y().whileTrue(new Roller(m_roller));
     m_controller.rightTrigger().whileTrue(new PitcherOut(m_pitcher));
     m_controller.leftTrigger().whileTrue(new PitcherIn(m_pitcher));
