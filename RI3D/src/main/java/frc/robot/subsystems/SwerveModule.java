@@ -26,7 +26,7 @@ public class SwerveModule {
     private final RelativeEncoder m_driveEncoder, m_steerEncoder;
 
     private final SparkClosedLoopController m_drivePID;
-    private final PIDController m_steerPID;
+    private final SparkClosedLoopController m_steerPID;
     private final SimpleMotorFeedforward m_driveFF;
 
     private final CANcoder m_CANCoder;
@@ -61,11 +61,12 @@ public class SwerveModule {
         // m_driveEncoder.setVelocityConversionFactor(((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60);
 
         m_drivePID = m_driveMotor.getClosedLoopController();
+        m_steerPID = m_steerMotor.getClosedLoopController();
         // m_drivePID = new PIDController(0.1, 0, 0);
-        m_steerPID = new PIDController(.5, 0, 0); // TODO (old): set these
-        m_steerPID.enableContinuousInput(-Math.PI, Math.PI);
+        // m_steerPID = new PIDController(.5, 0, 0); // TODO (old): set these
+        // m_steerPID.enableContinuousInput(-Math.PI, Math.PI);
         
-        m_steerPID.setTolerance(0.0004); //10 degree tolerance
+        // m_steerPID.setTolerance(0.0004); //10 degree tolerance
 
 
         modNum = swerveID;
@@ -85,26 +86,6 @@ public class SwerveModule {
         setAngle(state);
     }
 
-    /**
-     * 
-     * @return
-     */
-    private SwerveModuleState getState() {
-        if (m_curState == null) {
-            m_curState = new SwerveModuleState();
-        }
-
-        m_curState.angle = new Rotation2d(getAngle());
-        m_curState.speedMetersPerSecond = getSpeed();
-
-        return m_curState;
-    }
-
-    public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDistance(), new Rotation2d(getAngle()));
-    }
-
-    
     /**
      * Gets the speed of the drive motor.
      * @return the current speed in meters per second.
@@ -126,10 +107,14 @@ public class SwerveModule {
      * 
      * @return 
      */
-    public double getAngle() {
+    public double getAngleRelative() {
         // 360 degrees in a circle divided by 4096 encoder counts/revolution (CANCoder resolution)
         // return (m_CANCoder.getAbsolutePosition() * 360 / 4096) - m_encoderOffset.getDegrees();
         return m_steerEncoder.getPosition();
+    }
+
+    public double getAngleAbsolute() {
+        return (m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset) * 2 * Math.PI;
     }
 
     /**
@@ -139,21 +124,15 @@ public class SwerveModule {
     private void setAngle(SwerveModuleState state) {
         //Rotation2d angle = (Math.abs(state.speedMetersPerSecond) <= (DrivetrainConstants.maxSpeed * 0.01)) ? m_lastAngle : state.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
         Rotation2d angle = state.angle;
-        m_steerPID.setSetpoint(angle.getRadians());
-    }
-
-    public double getAbsEncoderPos() {
-        // TODO check on getvalue call
-        return (m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset)*2*Math.PI;
+        // m_steerPID.setSetpoint(angle.getRadians());
+        m_steerPID.setReference(angle.getRadians(), ControlType.kPosition);
     }
 
     private void resetEncoders() {
         m_driveEncoder.setPosition(0);
-        m_steerEncoder.setPosition(getAbsEncoderPos());
-    }
-
-    private double getDistance() {
-        return m_driveMotor.getEncoder().getPosition();
+        m_steerEncoder.setPosition(getAngleAbsolute());
+        if (modNum == 3) m_steerPID.setReference(0, ControlType.kPosition);
+        if (modNum == 3) m_drivePID.setReference(0.5, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(0.5));
     }
 
     /**
@@ -191,13 +170,13 @@ public class SwerveModule {
         config.encoder
             .positionConversionFactor((1/12.8) * 2 * Math.PI);
         
+        config.closedLoop
+            .pid(0.5,0,0);
+        
         m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    public void updateSteer() {
-        m_steerMotor.setVoltage(m_steerPID.calculate(getAngle()));
-    }
     public void ReZero(){
-        m_steerEncoder.setPosition(getAbsEncoderPos());   
+        m_steerEncoder.setPosition(getAngleAbsolute());   
     }
 }

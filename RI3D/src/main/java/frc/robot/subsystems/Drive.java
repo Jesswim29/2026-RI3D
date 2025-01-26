@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
@@ -60,13 +61,21 @@ public class Drive extends SubsystemBase {
         }
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
+        // SmartDashboard.putNumber("commanded front left angle", moduleStates[0].angle.getDegrees());
+        // SmartDashboard.putNumber("commanded front right angle", moduleStates[1].angle.getDegrees());
+        // SmartDashboard.putNumber("commanded back left angle", moduleStates[2].angle.getDegrees());
+        // SmartDashboard.putNumber("commanded back right angle", moduleStates[3].angle.getDegrees());
+
+        // TODO test one wheel at a time
+        // m_mods[0].setDesiredState(moduleStates[0]);
+
+        // SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
         
-        for (SwerveModule curMod : m_mods) {
-            /* optimize the angle of each module before sending the updated positioning to the module */
-            moduleStates[curMod.modNum].optimize(new Rotation2d(curMod.getAngle()));
-            curMod.setDesiredState(moduleStates[curMod.modNum]);
-        }
+        // for (SwerveModule curMod : m_mods) {
+        //     /* optimize the angle of each module before sending the updated positioning to the module */
+        //     moduleStates[curMod.modNum].optimize(new Rotation2d(curMod.getAngle()));
+        //     curMod.setDesiredState(moduleStates[curMod.modNum]);
+        // }
     }
 
     /**
@@ -80,10 +89,8 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        for (SwerveModule curMod : m_mods)
-        {
-            curMod.updateSteer();
-        }
+        SmartDashboard.putNumber("front left absolute angle", m_mods[0].getAngleAbsolute());
+        SmartDashboard.putNumber("front left relative angle", m_mods[0].getAngleRelative());
     }
 
     public void goToAngle(double ang) {
@@ -93,10 +100,6 @@ public class Drive extends SubsystemBase {
         }
     }
     
-    public double getAngle() {
-        return m_mods[0].getAbsEncoderPos();
-    }
-
     public void ZeroWheels(){
         // Rezeroing Steer wheels??
         for (SwerveModule curMod : m_mods)
