@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -12,15 +13,15 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
-public class SwerveModule {
+public class SwerveModule extends SubsystemBase {
     private final SparkMax m_driveMotor, m_steerMotor;
 
     private final RelativeEncoder m_driveEncoder, m_steerEncoder;
@@ -31,7 +32,7 @@ public class SwerveModule {
 
     private final CANcoder m_CANCoder;
 
-    private final double m_encoderOffset;
+    private double m_encoderOffset;
 
     private SwerveModuleState m_curState;
 
@@ -70,6 +71,8 @@ public class SwerveModule {
 
 
         modNum = swerveID;
+
+        SmartDashboard.putNumber("encoder offset " + modNum, m_encoderOffset);
 
         configSteer();
         resetEncoders();
@@ -131,8 +134,8 @@ public class SwerveModule {
     private void resetEncoders() {
         m_driveEncoder.setPosition(0);
         m_steerEncoder.setPosition(getAngleAbsolute());
-        if (modNum == 3) m_steerPID.setReference(0, ControlType.kPosition);
-        if (modNum == 3) m_drivePID.setReference(0.5, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(0.5));
+        m_steerPID.setReference(0, ControlType.kPosition);
+        m_drivePID.setReference(0.5, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(0.5));
     }
 
     /**
@@ -156,10 +159,10 @@ public class SwerveModule {
         config.smartCurrentLimit(60, 30);
         //0 is front left swerve
         //2 is back left swerve
-        //if (m_swerveID != 1) {
+        if (modNum == 0 || modNum == 2) {
             config.inverted(true);
             System.out.println("SwerveID config checked");
-        //}
+        }
 
         m_driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -174,9 +177,22 @@ public class SwerveModule {
             .pid(0.5,0,0);
         
         m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        // make the CANCoder return a value (0,1) instead of (-0.5,0.5)
+        MagnetSensorConfigs encoderConfig = new MagnetSensorConfigs();
+        m_CANCoder.getConfigurator().refresh(encoderConfig);
+        encoderConfig.withAbsoluteSensorDiscontinuityPoint(1);
+        m_CANCoder.getConfigurator().apply(encoderConfig);
     }
 
     public void ReZero(){
         m_steerEncoder.setPosition(getAngleAbsolute());   
+    }
+
+    @Override
+    public void periodic() {
+        // m_encoderOffset = SmartDashboard.getNumber("encoder offset " + modNum, 0);
+        // SmartDashboard.putNumber("relative encoder " + modNum + " ", m_driveEncoder.getPosition());
+        // resetEncoders();
     }
 }
