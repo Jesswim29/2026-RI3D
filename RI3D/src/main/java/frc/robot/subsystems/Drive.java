@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
@@ -34,10 +33,10 @@ public class Drive extends SubsystemBase {
         };
 
         // locations are also in terms of the wpilib coordinate system
-        m_frontLeftLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
+        m_frontLeftLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
         m_frontRightLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
         m_backLeftLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
-        m_backRightLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
+        m_backRightLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
 
         m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
     }
@@ -63,6 +62,12 @@ public class Drive extends SubsystemBase {
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
+        for (var mod : m_mods)
+        {
+            SmartDashboard.putNumber("speed " + mod.modNum + ": ", moduleStates[mod.modNum].speedMetersPerSecond);
+            SmartDashboard.putNumber("angles " + mod.modNum + ": ", moduleStates[mod.modNum].angle.getDegrees());
+        }
+
         // TODO test one wheel at a time
         // m_mods[1].setDesiredState(moduleStates[1]);
 
@@ -86,8 +91,7 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("front right absolute angle", m_mods[1].getAngleAbsolute());
-        SmartDashboard.putNumber("front right relative angle", m_mods[1].getAngleRelative());
+        SmartDashboard.putNumber("gyro angle: ", m_Gyro.getGyroAngle().getDegrees());
     }
 
     public void goToAngle(double ang) {
