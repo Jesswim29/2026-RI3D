@@ -28,25 +28,25 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Gyro m_gyro = new Gyro();
   private final Drive m_drive = new Drive(m_gyro);
-  // private final Elevator m_elevator = new Elevator();
-  // private final AlgaeRoller m_roller = new AlgaeRoller();
-  // private final CoralPitcherinator m_pitcher = new CoralPitcherinator();
+  private final Elevator m_elevator = new Elevator();
+  private final AlgaeRoller m_roller = new AlgaeRoller();
+  private final CoralPitcherinator m_pitcher = new CoralPitcherinator();
 
   private final XboxController m_driver = new XboxController(Constants.kDriveController);
-  // private final CommandXboxController m_controller = new CommandXboxController(Constants.kButtonController);
+  private final CommandXboxController m_controller = new CommandXboxController(Constants.kButtonController);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    // m_controller.a().onTrue(new ElevateDown(m_elevator));
-    // m_controller.b().onTrue(new ElevateUp(m_elevator));
-    // m_controller.povUp().whileTrue(new ElevatorUpOverride(m_elevator));
-    // m_controller.povDown().whileTrue(new ElevatorDownOverride(m_elevator));
-    // m_controller.y().whileTrue(new Roller(m_roller));
-    // m_controller.rightTrigger().whileTrue(new PitcherOut(m_pitcher));
-    // m_controller.leftTrigger().whileTrue(new PitcherIn(m_pitcher));
+    m_controller.a().onTrue(new ElevateDown(m_elevator));
+    m_controller.b().onTrue(new ElevateUp(m_elevator));
+    m_controller.povUp().whileTrue(new ElevatorUpOverride(m_elevator));
+    m_controller.povDown().whileTrue(new ElevatorDownOverride(m_elevator));
+    m_controller.y().whileTrue(new Roller(m_roller));
+    m_controller.rightTrigger().whileTrue(new PitcherOut(m_pitcher));
+    m_controller.leftTrigger().whileTrue(new PitcherIn(m_pitcher));
     
     m_drive.setDefaultCommand(
       new TeleopDrive(
@@ -57,22 +57,22 @@ public class RobotContainer {
       )
     );
     
-    // m_controller.x().onTrue(new InstantCommand() {
-    //   @Override
-    //   public void initialize() {
+    m_controller.x().onTrue(new InstantCommand() {
+      @Override
+      public void initialize() {
   
-    //       m_drive.ZeroWheels();
-    //       System.out.println("Zeroing the wheels");
+          m_drive.ZeroWheels();
+          System.out.println("Zeroing the wheels");
         
-    //   };
-    // }); 
-    // m_controller.y().onTrue(new InstantCommand(){
-    //   @Override
-    //   public void initialize() {
-    //     m_gyro.zeroGyro();
+      };
+    }); 
+    m_controller.y().onTrue(new InstantCommand(){
+      @Override
+      public void initialize() {
+        m_gyro.zeroGyro();
 
-    //   };
-    // });
+      };
+    });
 
     
     // m_controller.start().onTrue(new InstantCommand() {

@@ -42,7 +42,7 @@ public class TeleopDrive extends Command {
     var rotVal = MathUtil.applyDeadband(m_rot.getAsDouble(), Constants.kDeadzone);
 
     m_drive.swerve(new Translation2d(-yVal, xVal).times(DrivetrainConstants.maxSpeed),
-        rotVal * DrivetrainConstants.maxTurningSpeed, false); // TODO: Get this to work
+        rotVal * DrivetrainConstants.maxTurningSpeed, true); // TODO: Get this to work
   }
 
   // Called once the command ends or is interrupted.

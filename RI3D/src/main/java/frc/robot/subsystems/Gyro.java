@@ -11,6 +11,7 @@ public class Gyro {
     private Pigeon2 m_gyro = new Pigeon2(Constants.pigeonID);
 
     public Gyro() {
+        zeroGyro();
     }
 
     /**
@@ -18,7 +19,7 @@ public class Gyro {
      * @return raw gyro angle in degrees
      */
     public Rotation2d getGyroAngle() {
-        return m_gyro.getRotation2d();
+        return Rotation2d.fromDegrees(MathUtil.inputModulus(m_gyro.getRotation2d().getDegrees(), -180, 180));
     }
 
     public void zeroGyro() {
