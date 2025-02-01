@@ -33,10 +33,11 @@ public class Drive extends SubsystemBase {
             new SwerveModule(DrivetrainConstants.backRightDriveID, DrivetrainConstants.backRightSteerID, DrivetrainConstants.backRightCANCoderID, DrivetrainConstants.backRightEncoderOffset, 3)
         };
 
-        m_frontLeftLocation = new Translation2d(-DrivetrainConstants.xOffsetMeters, DrivetrainConstants.yOffsetMeters);
-        m_frontRightLocation = new Translation2d(DrivetrainConstants.xOffsetMeters, DrivetrainConstants.yOffsetMeters);
-        m_backLeftLocation = new Translation2d(-DrivetrainConstants.xOffsetMeters, -DrivetrainConstants.yOffsetMeters);
-        m_backRightLocation = new Translation2d(DrivetrainConstants.xOffsetMeters, -DrivetrainConstants.yOffsetMeters);
+        // locations are also in terms of the wpilib coordinate system
+        m_frontLeftLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
+        m_frontRightLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
+        m_backLeftLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
+        m_backRightLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
 
         m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
     }
