@@ -15,6 +15,7 @@ import frc.robot.Constants.DrivetrainConstants.ElevatorParams;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 // TODO
 // - set up the PID loop
@@ -26,7 +27,6 @@ public class Elevator extends SubsystemBase {
     private final RelativeEncoder m_externalEncoder;
     private final ProfiledPIDController m_controller;
 
-    private int messageNum = 0;
     private boolean overrideFlag = false;
     private double outputSpeed = 0;
     
@@ -87,20 +87,12 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(!overrideFlag){
+        if(!overrideFlag) {
             outputSpeed = m_controller.calculate(m_externalEncoder.getPosition());
         }
 
-        if (messageNum >= 50)
-        {
-            System.out.printf("attempting to output %f\n", outputSpeed);
-            System.out.printf("Encoder: %.4f", m_externalEncoder.getPosition());
-            messageNum = 0;
-        }
-        else
-        {
-            ++messageNum;
-        }
+        SmartDashboard.putNumber("elevator update: ", outputSpeed);
+        SmartDashboard.putNumber("Elevator Encoder: ", m_externalEncoder.getPosition());
 
         m_elevator.set(outputSpeed);
     }

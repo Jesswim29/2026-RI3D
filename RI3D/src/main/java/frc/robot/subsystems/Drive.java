@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -62,20 +63,11 @@ public class Drive extends SubsystemBase {
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
-        for (var mod : m_mods)
-        {
-            SmartDashboard.putNumber("speed " + mod.modNum + ": ", moduleStates[mod.modNum].speedMetersPerSecond);
-            SmartDashboard.putNumber("angles " + mod.modNum + ": ", moduleStates[mod.modNum].angle.getDegrees());
-        }
-
-        // TODO test one wheel at a time
-        // m_mods[1].setDesiredState(moduleStates[1]);
-
-        // SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
         
         for (SwerveModule curMod : m_mods) {
             /* optimize the angle of each module before sending the updated positioning to the module */
-            // moduleStates[curMod.modNum].optimize(new Rotation2d(curMod.getAngle()));
+            moduleStates[curMod.modNum].optimize(Rotation2d.fromDegrees(MathUtil.inputModulus(curMod.getAngleRelative(), -180, 180)));
             curMod.setDesiredState(moduleStates[curMod.modNum]);
         }
     }
@@ -91,7 +83,6 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("gyro angle: ", m_Gyro.getGyroAngle().getDegrees());
     }
 
     public void goToAngle(double ang) {

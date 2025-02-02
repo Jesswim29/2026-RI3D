@@ -40,8 +40,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    m_controller.a().onTrue(new ElevateDown(m_elevator));
-    m_controller.b().onTrue(new ElevateUp(m_elevator));
+    // m_controller.a().onTrue(new ElevateDown(m_elevator));
+    // m_controller.b().onTrue(new ElevateUp(m_elevator));
     m_controller.povUp().whileTrue(new ElevatorUpOverride(m_elevator));
     m_controller.povDown().whileTrue(new ElevatorDownOverride(m_elevator));
     m_controller.y().whileTrue(new Roller(m_roller));
@@ -53,10 +53,12 @@ public class RobotContainer {
         () -> m_driver.getLeftY(),
         () -> -m_driver.getLeftX(),
         () -> m_driver.getRightX(),
-        m_drive
+        () -> m_driver.getAButton(),
+        m_drive,
+        m_gyro
       )
     );
-    
+
     m_controller.x().onTrue(new InstantCommand() {
       @Override
       public void initialize() {
