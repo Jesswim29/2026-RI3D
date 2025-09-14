@@ -39,7 +39,6 @@ public class SwerveModule extends SubsystemBase {
     public final int modNum;
 
     /**
-     * 
      * @param driveID       CAN ID of the drive motor
      * @param steerID       CAN ID of the steer motor
      * @param encoderID     CAN ID of the CANCoder
@@ -57,18 +56,9 @@ public class SwerveModule extends SubsystemBase {
         
         m_driveFF = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
 
-        // TODO see what this changed to
-        // m_steerEncoder.setPositionConversionFactor((1/12.8) * 2 * Math.PI);
-        // m_driveEncoder.setVelocityConversionFactor(((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60);
 
         m_drivePID = m_driveMotor.getClosedLoopController();
         m_steerPID = m_steerMotor.getClosedLoopController();
-        // m_drivePID = new PIDController(0.1, 0, 0);
-        // m_steerPID = new PIDController(.5, 0, 0); // TODO (old): set these
-        // m_steerPID.enableContinuousInput(-Math.PI, Math.PI);
-        
-        // m_steerPID.setTolerance(0.0004); //10 degree tolerance
-
 
         modNum = swerveID;
 
@@ -81,8 +71,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     /**
-     * 
-     * @param state 
+     * @param state The state of the desired swerve module
      */
     public void setDesiredState(SwerveModuleState state)  {
         setSpeed(state);
@@ -98,36 +87,22 @@ public class SwerveModule extends SubsystemBase {
     }
 
     /**
-     * 
      * @param state
      */
     public void setSpeed(SwerveModuleState state) {
         m_drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(state.speedMetersPerSecond));
-        // m_drivePID.setSetpoint(state.speedMetersPerSecond);
     }
 
-    /**
-     * 
-     * @return 
-     */
-    public double getAngleRelative() {
-        // 360 degrees in a circle divided by 4096 encoder counts/revolution (CANCoder resolution)
-        // return (m_CANCoder.getAbsolutePosition() * 360 / 4096) - m_encoderOffset.getDegrees();
-        return m_steerEncoder.getPosition();
-    }
 
     public double getAngleAbsolute() {
         return (m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset) * 2 * Math.PI;
     }
 
     /**
-     * 
      * @param state
      */
     private void setAngle(SwerveModuleState state) {
-        //Rotation2d angle = (Math.abs(state.speedMetersPerSecond) <= (DrivetrainConstants.maxSpeed * 0.01)) ? m_lastAngle : state.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
         Rotation2d angle = state.angle;
-        // m_steerPID.setSetpoint(angle.getRadians());
         m_steerPID.setReference(angle.getRadians(), ControlType.kPosition);
     }
 
@@ -138,9 +113,6 @@ public class SwerveModule extends SubsystemBase {
         m_drivePID.setReference(0.5, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(0.5));
     }
 
-    /**
-     * 
-     */
     private void configDrive() {
         var config = new SparkMaxConfig();
 
@@ -157,12 +129,7 @@ public class SwerveModule extends SubsystemBase {
                 DrivetrainConstants.DriveParams.kFF
             );
         config.smartCurrentLimit(60, 30);
-        //0 is front left swerve
-        //2 is back left swerve
-        if (modNum == 0 || modNum == 2) {
-            config.inverted(true);
-            System.out.println("SwerveID config checked");
-        }
+        
 
         m_driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -178,21 +145,16 @@ public class SwerveModule extends SubsystemBase {
         
         m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // make the CANCoder return a value (0,1) instead of (-0.5,0.5)
         MagnetSensorConfigs encoderConfig = new MagnetSensorConfigs();
         m_CANCoder.getConfigurator().refresh(encoderConfig);
+
+        // make the CANCoder return a value (0,1) instead of (-0.5,0.5)
         encoderConfig.withAbsoluteSensorDiscontinuityPoint(1);
         m_CANCoder.getConfigurator().apply(encoderConfig);
     }
 
-    public void ReZero(){
+    public void reZero(){
         m_steerEncoder.setPosition(getAngleAbsolute());   
     }
-
-    @Override
-    public void periodic() {
-        // m_encoderOffset = SmartDashboard.getNumber("encoder offset " + modNum, 0);
-        // SmartDashboard.putNumber("relative encoder " + modNum + " ", m_driveEncoder.getPosition());
-        // resetEncoders();
-    }
+    
 }

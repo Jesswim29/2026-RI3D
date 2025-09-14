@@ -50,16 +50,6 @@ public final class Constants {
         public static final double xOffsetMeters = Units.inchesToMeters(12.5);
         public static final double yOffsetMeters = Units.inchesToMeters(12.5);
 
-        public static final class ElevatorParams{
-            public static final double kP = 0.3;
-            public static final double kI = 0;
-            public static final double kD = 0;
-            public static final double kFF = 0;
-            public static final double elevatorSpeed = 0.15;
-            public static final int elevatorMotorID = 9;
-            public static final double maxHeight = 26.0;
-            public static final IdleMode kIdleMode = IdleMode.kBrake;
-        }
 
         public static final class DriveParams {
             public static final double kP = 0.1/4.0;
@@ -77,16 +67,5 @@ public final class Constants {
             public static final IdleMode kIdleMode = IdleMode.kBrake;
         }
 
-        public static final class PitcherParams {
-            public static final double pitcherSpeed = 0;
-            public static final int pitcherMotorID = 12;
-            public static final IdleMode kIdleMode = IdleMode.kBrake;
-        }
-
-        public static final class RollerParams {
-            public static final double rollerSpeed = 0;
-            public static final int rollerMotorID = 13; // TODO: Set motor ID
-            public static final IdleMode kIdleMode = IdleMode.kBrake;
-        }
     }
 }

@@ -65,11 +65,6 @@ public class Drive extends SubsystemBase {
 
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
         
-        for (SwerveModule curMod : m_mods) {
-            /* optimize the angle of each module before sending the updated positioning to the module */
-            moduleStates[curMod.modNum].optimize(Rotation2d.fromDegrees(MathUtil.inputModulus(curMod.getAngleRelative(), -180, 180)));
-            curMod.setDesiredState(moduleStates[curMod.modNum]);
-        }
     }
 
     /**
@@ -78,25 +73,14 @@ public class Drive extends SubsystemBase {
      * @param rotation      rotation (radians/sec)
      */
     public void swerve(Translation2d translation, Double rotation) {
-        swerve(translation, rotation, true);
+        swerve(translation, rotation, false);
     }
 
-    @Override
-    public void periodic() {
-    }
 
     public void goToAngle(double ang) {
         for (SwerveModule curMod : m_mods)
         {
             curMod.setDesiredState(new SwerveModuleState(0d, Rotation2d.fromDegrees(ang)));
-        }
-    }
-    
-    public void ZeroWheels(){
-        // Rezeroing Steer wheels??
-        for (SwerveModule curMod : m_mods)
-        {
-            curMod.ReZero();
         }
     }
 

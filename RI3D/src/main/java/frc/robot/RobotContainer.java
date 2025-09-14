@@ -6,12 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.*;
 import frc.robot.commands.Swerve.TeleopDrive;
-import frc.robot.subsystems.AlgaeRoller;
-import frc.robot.subsystems.CoralPitcherinator;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Gyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -28,12 +24,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Gyro m_gyro = new Gyro();
   private final Drive m_drive = new Drive(m_gyro);
-  private final Elevator m_elevator = new Elevator();
-  private final AlgaeRoller m_roller = new AlgaeRoller();
-  private final CoralPitcherinator m_pitcher = new CoralPitcherinator();
 
   private final XboxController m_driver = new XboxController(Constants.kDriveController);
-  private final CommandXboxController m_controller = new CommandXboxController(Constants.kButtonController);
+  private final CommandXboxController op_controller = new CommandXboxController(Constants.kButtonController);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -42,11 +35,6 @@ public class RobotContainer {
 
     // m_controller.a().onTrue(new ElevateDown(m_elevator));
     // m_controller.b().onTrue(new ElevateUp(m_elevator));
-    m_controller.povUp().whileTrue(new ElevatorUpOverride(m_elevator));
-    m_controller.povDown().whileTrue(new ElevatorDownOverride(m_elevator));
-    m_controller.y().whileTrue(new Roller(m_roller));
-    m_controller.rightTrigger().whileTrue(new PitcherOut(m_pitcher));
-    m_controller.leftTrigger().whileTrue(new PitcherIn(m_pitcher));
     
     m_drive.setDefaultCommand(
       new TeleopDrive(
@@ -59,22 +47,6 @@ public class RobotContainer {
       )
     );
 
-    m_controller.x().onTrue(new InstantCommand() {
-      @Override
-      public void initialize() {
-  
-          m_drive.ZeroWheels();
-          System.out.println("Zeroing the wheels");
-        
-      };
-    }); 
-    m_controller.y().onTrue(new InstantCommand(){
-      @Override
-      public void initialize() {
-        m_gyro.zeroGyro();
-
-      };
-    });
 
     
     // m_controller.start().onTrue(new InstantCommand() {
