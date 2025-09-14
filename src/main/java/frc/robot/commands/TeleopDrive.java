@@ -17,28 +17,30 @@ import java.util.function.DoubleSupplier;
 public class TeleopDrive extends Command {
 
     /** Creates a new TeleopDrive. */
-    private DoubleSupplier yTranslation;
-    private DoubleSupplier xStrafe;
+    private DoubleSupplier translation;
+    private DoubleSupplier strafe;
     private DoubleSupplier rotation;
     // The following is seemingly not being used anywhere
-    // TODO: Reimplement gyro zeroing (please for the love of something give this variable a sane name, not m_a)
-    // private BooleanSupplier m_a; // used to store the gyro reset button
+    // TODO: Reimplement gyro zeroing (please for the love of something give this variable a sane name, not gyroResetButton)
+    private BooleanSupplier gyroResetButton;
+
     private Drive m_drive;
     private Gyro m_gyro;
 
     public TeleopDrive(
-        DoubleSupplier y,
-        DoubleSupplier x,
-        DoubleSupplier rot,
+        DoubleSupplier translationBut,
+        DoubleSupplier strafeBut,
+        DoubleSupplier rotation,
         BooleanSupplier a,
         Drive drive,
         Gyro gyro
     ) {
         // Use addRequirements() here to declare subsystem dependencies.
-        yTranslation = y;
-        xStrafe = x;
-        rotation = rot;
-        m_a = a;
+        this.translation = y;
+        this.strafe = x;
+        this.rotation = rotation;
+        this.gyroResetButton = a;
+
         m_drive = drive;
         m_gyro = gyro;
         addRequirements(m_drive);
@@ -52,12 +54,12 @@ public class TeleopDrive extends Command {
     @Override
     public void execute() {
         double yVal = MathUtil.applyDeadband(
-            yTranslation.getAsDouble(),
+            translation.getAsDouble(),
             Constants.kDeadzone
         );
 
         double xVal = MathUtil.applyDeadband(
-            xStrafe.getAsDouble(),
+            strafe.getAsDouble(),
             Constants.kDeadzone
         );
 
@@ -67,7 +69,7 @@ public class TeleopDrive extends Command {
         );
 
         // commented: see above
-        //if (m_a.getAsBoolean()) {
+        //if (gyroResetButton.getAsBoolean()) {
         //    m_gyro.zeroGyro();
         //}
 
