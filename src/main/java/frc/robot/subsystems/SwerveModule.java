@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
@@ -97,12 +99,14 @@ public class SwerveModule extends SubsystemBase {
      * @param state
      */
     public void setSpeed(SwerveModuleState state) {
-        m_drivePID.setReference(
-            state.speedMetersPerSecond,
-            ControlType.kVelocity,
-            ClosedLoopSlot.kSlot0,
-            m_driveFF.calculate(state.speedMetersPerSecond)
-        );
+        // m_drivePID.setReference(
+        //     state.speedMetersPerSecond,
+        //     ControlType.kVelocity,
+        //     ClosedLoopSlot.kSlot0,
+        //     m_driveFF.calculate(state.speedMetersPerSecond)
+        // );\
+        SmartDashboard.putNumber("AKDBJHWSGJFBASHJBFHJ", state.speedMetersPerSecond);
+        m_driveMotor.set(state.speedMetersPerSecond);
     }
 
     public double getAngleAbsolute() {
@@ -153,7 +157,7 @@ public class SwerveModule extends SubsystemBase {
                 DrivetrainConstants.DriveParams.kD,
                 DrivetrainConstants.DriveParams.kFF
             );
-        config.smartCurrentLimit(60, 7);
+        config.smartCurrentLimit(60, 20);
 
         m_driveMotor.configure(
             config,
