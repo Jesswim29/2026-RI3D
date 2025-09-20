@@ -13,6 +13,7 @@
 | Front Left CANCoder | 10 |
 | Front Right CANCoder | 11 |
 | Back Left CANCoder | 12 |
+| Pigeon (Gyro) | 13 |
 | PDP | 63 |
 
 TEMPORARY FOR NOW
