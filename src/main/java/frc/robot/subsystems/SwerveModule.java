@@ -151,6 +151,7 @@ public class SwerveModule extends SubsystemBase {
                 DrivetrainConstants.DriveParams.kD,
                 DrivetrainConstants.DriveParams.kFF
             );
+        // no fire pls
         config.smartCurrentLimit(60, 7);
 
         m_driveMotor.configure(

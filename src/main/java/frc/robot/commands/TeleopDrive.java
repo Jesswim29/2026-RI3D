@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -67,14 +68,15 @@ public class TeleopDrive extends Command {
             rotation.getAsDouble(),
             Constants.kDeadzone
         );
-
+        SmartDashboard.putNumber("hell value", xVal);
+        SmartDashboard.putNumber("purgatory value", yVal);
         // commented: see above
         //if (gyroResetButton.getAsBoolean()) {
         //    m_gyro.zeroGyro();
         //}
 
         m_drive.swerve(
-            new Translation2d(-yVal, xVal).times(DrivetrainConstants.maxSpeed),
+            new Translation2d(-yVal, -xVal).times(DrivetrainConstants.maxSpeed),
             rotVal * DrivetrainConstants.maxTurningSpeed,
             false
         ); // TODO: Get this to work

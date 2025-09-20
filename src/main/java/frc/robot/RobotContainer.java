@@ -42,9 +42,9 @@ public class RobotContainer {
 
         m_drive.setDefaultCommand(
             new TeleopDrive(
-                () -> m_driver.getLeftY(),
-                () -> -m_driver.getLeftX(),
-                () -> m_driver.getRightX(),
+                () -> 0.0, //m_driver.getLeftY(),
+                () -> 0.0, //m_driver.getLeftX(),
+                () -> 0.0, //m_driver.getRightX(),
                 () -> m_driver.getAButton(),
                 m_drive,
                 m_gyro
