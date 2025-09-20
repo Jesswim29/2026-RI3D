@@ -13,6 +13,7 @@
 | Front Left CANCoder | 10 |
 | Front Right CANCoder | 11 |
 | Front Back CANCoder | 12 |
+| PDP | 63 |
 
 TEMPORARY FOR NOW
 
