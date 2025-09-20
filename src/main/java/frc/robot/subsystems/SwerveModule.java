@@ -98,17 +98,17 @@ public class SwerveModule extends SubsystemBase {
      * @param state
      */
     public void setSpeed(SwerveModuleState state) {
-        // m_drivePID.setReference(
-        //     state.speedMetersPerSecond,
-        //     ControlType.kVelocity,
-        //     ClosedLoopSlot.kSlot0,
-        //     m_driveFF.calculate(state.speedMetersPerSecond)
-        // );\
+        m_drivePID.setReference(
+            state.speedMetersPerSecond,
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0,
+            m_driveFF.calculate(state.speedMetersPerSecond)
+        );
         SmartDashboard.putNumber(
             "AKDBJHWSGJFBASHJBFHJ",
             state.speedMetersPerSecond
         );
-        m_driveMotor.set(state.speedMetersPerSecond);
+        // m_driveMotor.set(state.speedMetersPerSecond);
     }
 
     public double getAngleAbsolute() {

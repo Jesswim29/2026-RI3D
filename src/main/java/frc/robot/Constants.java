@@ -28,24 +28,24 @@ public final class Constants {
         public static final double maxSpeed = Units.feetToMeters(10);
         public static final double maxTurningSpeed = 4.5;
 
-        public static final int frontLeftDriveID = 7;
-        public static final int frontLeftSteerID = 1;
-        public static final int frontLeftCANCoderID = 21;
-        public static final double frontLeftEncoderOffset = 0.992920;
-
-        public static final int frontRightDriveID = 8;
-        public static final int frontRightSteerID = 6;
-        public static final int frontRightCANCoderID = 23;
-        public static final double frontRightEncoderOffset = 0.003418;
-
-        public static final int backLeftDriveID = 3;
-        public static final int backLeftSteerID = 4;
-        public static final int backLeftCANCoderID = 20;
+        public static final int backLeftDriveID = 1;
+        public static final int backLeftSteerID = 2;
+        public static final int backLeftCANCoderID = 9;
         public static final double backLeftEncoderOffset = 0.001709;
 
-        public static final int backRightDriveID = 5;
-        public static final int backRightSteerID = 2;
-        public static final int backRightCANCoderID = 22;
+        public static final int frontLeftDriveID = 3;
+        public static final int frontLeftSteerID = 4;
+        public static final int frontLeftCANCoderID = 10;
+        public static final double frontLeftEncoderOffset = 0.992920;
+
+        public static final int frontRightDriveID = 5;
+        public static final int frontRightSteerID = 6;
+        public static final int frontRightCANCoderID = 11;
+        public static final double frontRightEncoderOffset = 0.003418;
+
+        public static final int backRightDriveID = 7;
+        public static final int backRightSteerID = 8;
+        public static final int backRightCANCoderID = 12;
         public static final double backRightEncoderOffset = 0.490234;
 
         public static final double xOffsetMeters = Units.inchesToMeters(12.5);
