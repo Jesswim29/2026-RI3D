@@ -16,5 +16,3 @@
 | Pigeon (Gyro) | 13 |
 | PDP | 63 |
 
-TEMPORARY FOR NOW
-
