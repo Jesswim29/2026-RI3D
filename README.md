@@ -9,6 +9,10 @@
 | Steer | 6 |
 | Drive | 7 |
 | Steer | 8 |
+| CANCODER | 9 |
+| CANCODER | 10 |
+| CANCODER | 11 |
+| CANCODER | 12 |
 
 TEMPORARY FOR NOW
 
