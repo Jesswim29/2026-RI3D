@@ -90,7 +90,11 @@ public class Drive extends SubsystemBase {
      * @param rotation      rotational magnitude (radians/sec)
      * @param fieldOriented if true, swerve with respect to the bot
      */
-    public void swerve(Translation2d translation, Double rotation, boolean fieldOriented) {
+    public void swerve(
+        Translation2d translation,
+        Double rotation,
+        boolean fieldOriented
+    ) {
         SmartDashboard.putBoolean("fieldOriented (the voices)", fieldOriented);
         ChassisSpeeds speeds;
         if (fieldOriented) {
@@ -118,6 +122,15 @@ public class Drive extends SubsystemBase {
         );
 
         //TODO ASJNFJKDWSNKNFJKWDSBKFBJKABJKBFJK PUT THAT THERE IENRWJSEBJBFJKHBSHJKFB
+        for (SwerveModule curMod : m_mods) {
+            /* optimize the angle of each module before sending the updated positioning to the module */
+            moduleStates[curMod.modNum].optimize(
+                Rotation2d.fromDegrees(
+                    MathUtil.inputModulus(curMod.getAngleRelative(), -180, 180)
+                )
+            );
+            curMod.setDesiredState(moduleStates[curMod.modNum]);
+        }
     }
 
     /**

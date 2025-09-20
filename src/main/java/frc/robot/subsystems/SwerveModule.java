@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
@@ -21,6 +19,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
+import javax.swing.text.StyleContext.SmallAttributeSet;
 
 public class SwerveModule extends SubsystemBase {
 
@@ -105,7 +104,10 @@ public class SwerveModule extends SubsystemBase {
         //     ClosedLoopSlot.kSlot0,
         //     m_driveFF.calculate(state.speedMetersPerSecond)
         // );\
-        SmartDashboard.putNumber("AKDBJHWSGJFBASHJBFHJ", state.speedMetersPerSecond);
+        SmartDashboard.putNumber(
+            "AKDBJHWSGJFBASHJBFHJ",
+            state.speedMetersPerSecond
+        );
         m_driveMotor.set(state.speedMetersPerSecond);
     }
 
@@ -116,6 +118,10 @@ public class SwerveModule extends SubsystemBase {
             2 *
             Math.PI
         );
+    }
+
+    public double getAngleRelative() {
+        return m_steerEncoder.getPosition();
     }
 
     /**
