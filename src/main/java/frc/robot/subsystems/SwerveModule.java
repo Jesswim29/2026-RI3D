@@ -2,17 +2,16 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -22,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class SwerveModule extends SubsystemBase {
+
     private final SparkMax m_driveMotor, m_steerMotor;
 
     private final RelativeEncoder m_driveEncoder, m_steerEncoder;
@@ -44,18 +44,23 @@ public class SwerveModule extends SubsystemBase {
      * @param encoderID     CAN ID of the CANCoder
      * @param encoderOffset starting encoder position
      */
-    public SwerveModule(final int driveID, final int steerID, final int encoderID, final double encoderOffset, int swerveID) {
+    public SwerveModule(
+        final int driveID,
+        final int steerID,
+        final int encoderID,
+        final double encoderOffset,
+        int swerveID
+    ) {
         m_driveMotor = new SparkMax(driveID, MotorType.kBrushless);
-        m_steerMotor = new SparkMax(steerID, MotorType.kBrushless);       
+        m_steerMotor = new SparkMax(steerID, MotorType.kBrushless);
         m_CANCoder = new CANcoder(encoderID);
         m_encoderOffset = encoderOffset;
         System.out.println(swerveID + " " + steerID);
 
         m_driveEncoder = m_driveMotor.getEncoder();
         m_steerEncoder = m_steerMotor.getEncoder();
-        
-        m_driveFF = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
 
+        m_driveFF = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
 
         m_drivePID = m_driveMotor.getClosedLoopController();
         m_steerPID = m_steerMotor.getClosedLoopController();
@@ -73,7 +78,7 @@ public class SwerveModule extends SubsystemBase {
     /**
      * @param state The state of the desired swerve module
      */
-    public void setDesiredState(SwerveModuleState state)  {
+    public void setDesiredState(SwerveModuleState state) {
         setSpeed(state);
         setAngle(state);
     }
@@ -90,12 +95,21 @@ public class SwerveModule extends SubsystemBase {
      * @param state
      */
     public void setSpeed(SwerveModuleState state) {
-        m_drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(state.speedMetersPerSecond));
+        m_drivePID.setReference(
+            state.speedMetersPerSecond,
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0,
+            m_driveFF.calculate(state.speedMetersPerSecond)
+        );
     }
 
-
     public double getAngleAbsolute() {
-        return (m_CANCoder.getAbsolutePosition().getValueAsDouble() - m_encoderOffset) * 2 * Math.PI;
+        return (
+            (m_CANCoder.getAbsolutePosition().getValueAsDouble() -
+                m_encoderOffset) *
+            2 *
+            Math.PI
+        );
     }
 
     /**
@@ -110,7 +124,12 @@ public class SwerveModule extends SubsystemBase {
         m_driveEncoder.setPosition(0);
         m_steerEncoder.setPosition(getAngleAbsolute());
         m_steerPID.setReference(0, ControlType.kPosition);
-        m_drivePID.setReference(0.5, ControlType.kVelocity, ClosedLoopSlot.kSlot0, m_driveFF.calculate(0.5));
+        m_drivePID.setReference(
+            0.5,
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0,
+            m_driveFF.calculate(0.5)
+        );
     }
 
     private void configDrive() {
@@ -118,8 +137,12 @@ public class SwerveModule extends SubsystemBase {
 
         config.idleMode(DrivetrainConstants.DriveParams.kIdleMode);
         config.encoder
-            .positionConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75)))
-            .velocityConversionFactor((((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)); // in meters per second
+            .positionConversionFactor(
+                (((Units.inchesToMeters(4) * Math.PI) / 6.75))
+            )
+            .velocityConversionFactor(
+                (((Units.inchesToMeters(4) * Math.PI) / 6.75) / 60)
+            ); // in meters per second
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(
@@ -128,22 +151,27 @@ public class SwerveModule extends SubsystemBase {
                 DrivetrainConstants.DriveParams.kD,
                 DrivetrainConstants.DriveParams.kFF
             );
-        config.smartCurrentLimit(60, 30);
-        
+        config.smartCurrentLimit(60, 7);
 
-        m_driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_driveMotor.configure(
+            config,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
     }
 
     public void configSteer() {
         var config = new SparkMaxConfig();
 
-        config.encoder
-            .positionConversionFactor((1/12.8) * 2 * Math.PI);
-        
-        config.closedLoop
-            .pid(0.5,0,0);
-        
-        m_steerMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        config.encoder.positionConversionFactor((1 / 12.8) * 2 * Math.PI);
+
+        config.closedLoop.pid(0.5, 0, 0);
+
+        m_steerMotor.configure(
+            config,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
 
         MagnetSensorConfigs encoderConfig = new MagnetSensorConfigs();
         m_CANCoder.getConfigurator().refresh(encoderConfig);
@@ -153,8 +181,7 @@ public class SwerveModule extends SubsystemBase {
         m_CANCoder.getConfigurator().apply(encoderConfig);
     }
 
-    public void reZero(){
-        m_steerEncoder.setPosition(getAngleAbsolute());   
+    public void reZero() {
+        m_steerEncoder.setPosition(getAngleAbsolute());
     }
-    
 }

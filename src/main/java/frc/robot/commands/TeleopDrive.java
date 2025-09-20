@@ -36,8 +36,8 @@ public class TeleopDrive extends Command {
         Gyro gyro
     ) {
         // Use addRequirements() here to declare subsystem dependencies.
-        this.translation = y;
-        this.strafe = x;
+        this.translation = translationBut;
+        this.strafe = strafeBut;
         this.rotation = rotation;
         this.gyroResetButton = a;
 
