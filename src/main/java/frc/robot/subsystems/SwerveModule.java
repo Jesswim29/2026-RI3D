@@ -60,7 +60,9 @@ public class SwerveModule extends SubsystemBase {
         m_driveEncoder = m_driveMotor.getEncoder();
         m_steerEncoder = m_steerMotor.getEncoder();
 
-        m_driveFF = new SimpleMotorFeedforward(0.667, 2.44, 0.27);
+        // ks = min volts to make motors barely move
+        // ke = got number from neo documentation (don't worry about it)
+        m_driveFF = new SimpleMotorFeedforward(.12, .473);
 
         m_drivePID = m_driveMotor.getClosedLoopController();
         m_steerPID = m_steerMotor.getClosedLoopController();
@@ -125,7 +127,7 @@ public class SwerveModule extends SubsystemBase {
         m_steerEncoder.setPosition(getAngleAbsolute());
         m_steerPID.setReference(0, ControlType.kPosition);
         m_drivePID.setReference(
-            0.5,
+            0,
             ControlType.kVelocity,
             ClosedLoopSlot.kSlot0,
             m_driveFF.calculate(0.5)
@@ -151,7 +153,6 @@ public class SwerveModule extends SubsystemBase {
                 DrivetrainConstants.DriveParams.kD,
                 DrivetrainConstants.DriveParams.kFF
             );
-        // no fire pls
         config.smartCurrentLimit(60, 7);
 
         m_driveMotor.configure(

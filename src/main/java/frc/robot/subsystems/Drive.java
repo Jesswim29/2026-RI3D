@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Drive extends SubsystemBase {
+
     private SwerveModule[] m_mods;
 
     private final Translation2d m_frontLeftLocation, m_frontRightLocation;
@@ -24,31 +25,77 @@ public class Drive extends SubsystemBase {
 
         m_mods = new SwerveModule[] {
             /* front left */
-            new SwerveModule(DrivetrainConstants.frontLeftDriveID, DrivetrainConstants.frontLeftSteerID, DrivetrainConstants.frontLeftCANCoderID, DrivetrainConstants.frontLeftEncoderOffset, 0),
+            new SwerveModule(
+                DrivetrainConstants.frontLeftDriveID,
+                DrivetrainConstants.frontLeftSteerID,
+                DrivetrainConstants.frontLeftCANCoderID,
+                DrivetrainConstants.frontLeftEncoderOffset,
+                0
+            ),
             /* front right */
-            new SwerveModule(DrivetrainConstants.frontRightDriveID, DrivetrainConstants.frontRightSteerID, DrivetrainConstants.frontRightCANCoderID, DrivetrainConstants.frontRightEncoderOffset, 1),
+            new SwerveModule(
+                DrivetrainConstants.frontRightDriveID,
+                DrivetrainConstants.frontRightSteerID,
+                DrivetrainConstants.frontRightCANCoderID,
+                DrivetrainConstants.frontRightEncoderOffset,
+                1
+            ),
             /* back left */
-            new SwerveModule(DrivetrainConstants.backLeftDriveID, DrivetrainConstants.backLeftSteerID, DrivetrainConstants.backLeftCANCoderID, DrivetrainConstants.backLeftEncoderOffset, 2),
+            new SwerveModule(
+                DrivetrainConstants.backLeftDriveID,
+                DrivetrainConstants.backLeftSteerID,
+                DrivetrainConstants.backLeftCANCoderID,
+                DrivetrainConstants.backLeftEncoderOffset,
+                2
+            ),
             /* back right */
-            new SwerveModule(DrivetrainConstants.backRightDriveID, DrivetrainConstants.backRightSteerID, DrivetrainConstants.backRightCANCoderID, DrivetrainConstants.backRightEncoderOffset, 3)
+            new SwerveModule(
+                DrivetrainConstants.backRightDriveID,
+                DrivetrainConstants.backRightSteerID,
+                DrivetrainConstants.backRightCANCoderID,
+                DrivetrainConstants.backRightEncoderOffset,
+                3
+            ),
         };
 
         // locations are also in terms of the wpilib coordinate system
-        m_frontLeftLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
-        m_frontRightLocation = new Translation2d(-DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
-        m_backLeftLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, -DrivetrainConstants.xOffsetMeters);
-        m_backRightLocation = new Translation2d(DrivetrainConstants.yOffsetMeters, DrivetrainConstants.xOffsetMeters);
+        m_frontLeftLocation = new Translation2d(
+            -DrivetrainConstants.yOffsetMeters,
+            -DrivetrainConstants.xOffsetMeters
+        );
+        m_frontRightLocation = new Translation2d(
+            -DrivetrainConstants.yOffsetMeters,
+            DrivetrainConstants.xOffsetMeters
+        );
+        m_backLeftLocation = new Translation2d(
+            DrivetrainConstants.yOffsetMeters,
+            -DrivetrainConstants.xOffsetMeters
+        );
+        m_backRightLocation = new Translation2d(
+            DrivetrainConstants.yOffsetMeters,
+            DrivetrainConstants.xOffsetMeters
+        );
 
-        m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+        m_kinematics = new SwerveDriveKinematics(
+            m_frontLeftLocation,
+            m_frontRightLocation,
+            m_backLeftLocation,
+            m_backRightLocation
+        );
     }
 
     /**
-     * 
+     *
      * @param translation   linear movement (meters/sec)
      * @param rotation      rotational magnitude (radians/sec)
      * @param fieldOriented if true, swerve with respect to the bot
      */
-    public void swerve(Translation2d translation, Double rotation, boolean fieldOriented) {
+    public void swerve(
+        Translation2d translation,
+        Double rotation,
+        boolean fieldOriented
+    ) {
+        SmartDashboard.putBoolean("fieldOriented (the voices)", fieldOriented);
         ChassisSpeeds speeds;
         if (fieldOriented) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -58,13 +105,21 @@ public class Drive extends SubsystemBase {
                 Rotation2d.fromDegrees(m_Gyro.getGyroAngleClamped())
             );
         } else {
-            speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+            speeds = new ChassisSpeeds(
+                translation.getX(),
+                translation.getY(),
+                rotation
+            );
         }
 
-        SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
+        SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(
+            speeds
+        );
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DrivetrainConstants.maxSpeed);
-        
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+            moduleStates,
+            DrivetrainConstants.maxSpeed
+        );
     }
 
     /**
@@ -76,15 +131,15 @@ public class Drive extends SubsystemBase {
         swerve(translation, rotation, false);
     }
 
-
     public void goToAngle(double ang) {
-        for (SwerveModule curMod : m_mods)
-        {
-            curMod.setDesiredState(new SwerveModuleState(0d, Rotation2d.fromDegrees(ang)));
+        for (SwerveModule curMod : m_mods) {
+            curMod.setDesiredState(
+                new SwerveModuleState(0d, Rotation2d.fromDegrees(ang))
+            );
         }
     }
 
-    public void printPosition(){
+    public void printPosition() {
         //System.out.println(m_frontLeft.getAbsEncoderPos());
         //System.out.println(m_frontLeft.getPosition());
     }

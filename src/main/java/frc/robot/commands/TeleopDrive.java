@@ -69,7 +69,7 @@ public class TeleopDrive extends Command {
             Constants.kDeadzone
         );
         SmartDashboard.putNumber("hell value", xVal);
-        SmartDashboard.putNumber("purgatory value", yVal);
+        SmartDashboard.putNumber("purgatory value", translation.getAsDouble());
         // commented: see above
         //if (gyroResetButton.getAsBoolean()) {
         //    m_gyro.zeroGyro();

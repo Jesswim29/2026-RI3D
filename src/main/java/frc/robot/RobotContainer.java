@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.TeleopDrive;
@@ -42,9 +41,9 @@ public class RobotContainer {
 
         m_drive.setDefaultCommand(
             new TeleopDrive(
-                () -> 0.0, //m_driver.getLeftY(),
-                () -> 0.0, //m_driver.getLeftX(),
-                () -> 0.0, //m_driver.getRightX(),
+                () -> m_driver.getLeftY(),
+                () -> m_driver.getLeftX(),
+                () -> m_driver.getRightX(),
                 () -> m_driver.getAButton(),
                 m_drive,
                 m_gyro
@@ -65,7 +64,9 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        // i hate everything except configureButtonBindings
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

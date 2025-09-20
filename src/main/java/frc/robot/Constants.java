@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -17,12 +16,14 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
     public static final int pigeonID = 5;
-    public static final int kButtonController = 0;
-    public static final int kDriveController = 1;
+    public static final int kButtonController = 1;
+    public static final int kDriveController = 0;
     public static final double kDeadzone = 0.05;
 
     public static final class DrivetrainConstants {
+
         // public static final double maxSpeed = Units.feetToMeters(15.1);
         public static final double maxSpeed = Units.feetToMeters(10);
         public static final double maxTurningSpeed = 4.5;
@@ -50,22 +51,22 @@ public final class Constants {
         public static final double xOffsetMeters = Units.inchesToMeters(12.5);
         public static final double yOffsetMeters = Units.inchesToMeters(12.5);
 
-
         public static final class DriveParams {
-            public static final double kP = 0.1/4.0;
+
+            public static final double kP = 0.1 / 4.0;
             public static final double kI = 0;
             public static final double kD = 0;
-            public static final double kFF = 1/473.0;
+            public static final double kFF = 1 / 473.0;
             public static final IdleMode kIdleMode = IdleMode.kBrake;
         }
 
         public static final class SteerParams {
+
             public static final double kP = 0.01;
             public static final double kI = 0;
             public static final double kD = 0;
             public static final double kFF = 0;
             public static final IdleMode kIdleMode = IdleMode.kBrake;
         }
-
     }
 }
