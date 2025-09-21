@@ -30,7 +30,8 @@ public class Drive extends SubsystemBase {
                 DrivetrainConstants.frontLeftSteerID,
                 DrivetrainConstants.frontLeftCANCoderID,
                 DrivetrainConstants.frontLeftEncoderOffset,
-                0
+                0,
+                true
             ),
             /* front right */
             new SwerveModule(
@@ -38,7 +39,8 @@ public class Drive extends SubsystemBase {
                 DrivetrainConstants.frontRightSteerID,
                 DrivetrainConstants.frontRightCANCoderID,
                 DrivetrainConstants.frontRightEncoderOffset,
-                1
+                1,
+                false
             ),
             /* back left */
             new SwerveModule(
@@ -46,7 +48,8 @@ public class Drive extends SubsystemBase {
                 DrivetrainConstants.backLeftSteerID,
                 DrivetrainConstants.backLeftCANCoderID,
                 DrivetrainConstants.backLeftEncoderOffset,
-                2
+                2,
+                true
             ),
             /* back right */
             new SwerveModule(
@@ -54,7 +57,8 @@ public class Drive extends SubsystemBase {
                 DrivetrainConstants.backRightSteerID,
                 DrivetrainConstants.backRightCANCoderID,
                 DrivetrainConstants.backRightEncoderOffset,
-                3
+                3,
+                false
             ),
         };
 

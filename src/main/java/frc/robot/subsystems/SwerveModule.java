@@ -39,6 +39,8 @@ public class SwerveModule extends SubsystemBase {
 
     public final int modNum;
 
+    public  boolean inverted;
+
     /**
      * @param driveID       CAN ID of the drive motor
      * @param steerID       CAN ID of the steer motor
@@ -50,13 +52,14 @@ public class SwerveModule extends SubsystemBase {
         final int steerID,
         final int encoderID,
         final double encoderOffset,
-        int swerveID
-    ) {
+        int swerveID,
+        boolean inverted
+        ) {
+        this.inverted = inverted;
         m_driveMotor = new SparkMax(driveID, MotorType.kBrushless);
         m_steerMotor = new SparkMax(steerID, MotorType.kBrushless);
         m_CANCoder = new CANcoder(encoderID);
         m_encoderOffset = encoderOffset;
-        System.out.println(swerveID + " " + steerID);
 
         m_driveEncoder = m_driveMotor.getEncoder();
         m_steerEncoder = m_steerMotor.getEncoder();
@@ -164,6 +167,7 @@ public class SwerveModule extends SubsystemBase {
                 DrivetrainConstants.DriveParams.kFF
             );
         config.smartCurrentLimit(60, 20);
+        config.inverted(inverted);
 
         m_driveMotor.configure(
             config,
