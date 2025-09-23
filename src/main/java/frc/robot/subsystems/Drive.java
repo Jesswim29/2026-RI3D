@@ -12,10 +12,10 @@ import frc.robot.Constants.DrivetrainConstants;
 
 public class Drive extends SubsystemBase {
 
-    private SwerveModule[] m_mods;
+    private SwerveModule[] wheels;
 
-    private final Translation2d m_frontLeftLocation, m_frontRightLocation;
-    private final Translation2d m_backLeftLocation, m_backRightLocation;
+    private final Translation2d frontLeftLocation, frontRightLocation;
+    private final Translation2d backLeftLocation, backRightLocation;
     private final SwerveDriveKinematics m_kinematics;
 
     private final Gyro m_Gyro;
@@ -23,7 +23,7 @@ public class Drive extends SubsystemBase {
     public Drive(Gyro gyro) {
         m_Gyro = gyro;
 
-        m_mods = new SwerveModule[] {
+        wheels = new SwerveModule[] {
             /* front left */
             new SwerveModule(
                 DrivetrainConstants.frontLeftDriveID,
@@ -63,28 +63,28 @@ public class Drive extends SubsystemBase {
         };
 
         // locations are also in terms of the wpilib coordinate system
-        m_frontLeftLocation = new Translation2d(
+        frontLeftLocation = new Translation2d(
             -DrivetrainConstants.yOffsetMeters,
             -DrivetrainConstants.xOffsetMeters
         );
-        m_frontRightLocation = new Translation2d(
+        frontRightLocation = new Translation2d(
             -DrivetrainConstants.yOffsetMeters,
             DrivetrainConstants.xOffsetMeters
         );
-        m_backLeftLocation = new Translation2d(
+        backLeftLocation = new Translation2d(
             DrivetrainConstants.yOffsetMeters,
             -DrivetrainConstants.xOffsetMeters
         );
-        m_backRightLocation = new Translation2d(
+        backRightLocation = new Translation2d(
             DrivetrainConstants.yOffsetMeters,
             DrivetrainConstants.xOffsetMeters
         );
 
         m_kinematics = new SwerveDriveKinematics(
-            m_frontLeftLocation,
-            m_frontRightLocation,
-            m_backLeftLocation,
-            m_backRightLocation
+            frontLeftLocation,
+            frontRightLocation,
+            backLeftLocation,
+            backRightLocation
         );
     }
 
@@ -100,6 +100,15 @@ public class Drive extends SubsystemBase {
         boolean fieldOriented
     ) {
         SmartDashboard.putBoolean("fieldOriented (the voices)", fieldOriented);
+        int i = 0;
+        for (SwerveModule mod : wheels) {
+            SmartDashboard.putNumber(
+                i + " mortal realm value",
+                mod.getAngleRelative()
+            );
+            i += 1;
+        }
+
         ChassisSpeeds speeds;
         if (fieldOriented) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -124,17 +133,6 @@ public class Drive extends SubsystemBase {
             moduleStates,
             DrivetrainConstants.maxSpeed
         );
-
-        //TODO ASJNFJKDWSNKNFJKWDSBKFBJKABJKBFJK PUT THAT THERE IENRWJSEBJBFJKHBSHJKFB
-        for (SwerveModule curMod : m_mods) {
-            /* optimize the angle of each module before sending the updated positioning to the module */
-            moduleStates[curMod.modNum].optimize(
-                Rotation2d.fromDegrees(
-                    MathUtil.inputModulus(curMod.getAngleRelative(), -180, 180)
-                )
-            );
-            curMod.setDesiredState(moduleStates[curMod.modNum]);
-        }
     }
 
     /**
@@ -147,15 +145,13 @@ public class Drive extends SubsystemBase {
     }
 
     public void goToAngle(double ang) {
-        for (SwerveModule curMod : m_mods) {
-            curMod.setDesiredState(
+        // TODO: impl
+        /**
+        for (SwerveModule curMod : wheels) {
+           curMod.setDesiredState(
                 new SwerveModuleState(0d, Rotation2d.fromDegrees(ang))
             );
         }
-    }
-
-    public void printPosition() {
-        //System.out.println(m_frontLeft.getAbsEncoderPos());
-        //System.out.println(m_frontLeft.getPosition());
+        */
     }
 }
