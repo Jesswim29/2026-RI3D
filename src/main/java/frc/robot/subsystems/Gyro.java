@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,13 @@ public class Gyro extends SubsystemBase {
 
     public Gyro() {
         pigeon2 = new Pigeon2(pigeonDeviceID, "rio");
+        pigeon2
+            .getConfigurator()
+            .apply(
+                new MountPoseConfigs()
+                    .withMountPosePitch(180)
+                    .withMountPoseYaw(90)
+            );
     }
 
     @Override
