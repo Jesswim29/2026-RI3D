@@ -12,7 +12,7 @@ import frc.robot.Constants.DrivetrainConstants;
 
 public class Drive extends SubsystemBase {
 
-    private SwerveModule[] wheels;
+    private Wheel[] wheels;
 
     private final Translation2d frontLeftLocation, frontRightLocation;
     private final Translation2d backLeftLocation, backRightLocation;
@@ -23,41 +23,45 @@ public class Drive extends SubsystemBase {
     public Drive(Gyro gyro) {
         m_Gyro = gyro;
 
-        wheels = new SwerveModule[] {
+        wheels = new Wheel[] {
             /* front left */
-            new SwerveModule(
+            new Wheel(
+                0,
+                0, // x and y
                 DrivetrainConstants.frontLeftDriveID,
                 DrivetrainConstants.frontLeftSteerID,
                 DrivetrainConstants.frontLeftCANCoderID,
                 DrivetrainConstants.frontLeftEncoderOffset,
-                0,
                 true
             ),
             /* front right */
-            new SwerveModule(
+            new Wheel(
+                0,
+                0, // x and y
                 DrivetrainConstants.frontRightDriveID,
                 DrivetrainConstants.frontRightSteerID,
                 DrivetrainConstants.frontRightCANCoderID,
                 DrivetrainConstants.frontRightEncoderOffset,
-                1,
                 false
             ),
             /* back left */
-            new SwerveModule(
+            new Wheel(
+                0,
+                0, // x and y
                 DrivetrainConstants.backLeftDriveID,
                 DrivetrainConstants.backLeftSteerID,
                 DrivetrainConstants.backLeftCANCoderID,
                 DrivetrainConstants.backLeftEncoderOffset,
-                2,
                 true
             ),
             /* back right */
-            new SwerveModule(
+            new Wheel(
+                0,
+                0, // x and y
                 DrivetrainConstants.backRightDriveID,
                 DrivetrainConstants.backRightSteerID,
                 DrivetrainConstants.backRightCANCoderID,
                 DrivetrainConstants.backRightEncoderOffset,
-                3,
                 false
             ),
         };
@@ -100,15 +104,6 @@ public class Drive extends SubsystemBase {
         boolean fieldOriented
     ) {
         SmartDashboard.putBoolean("fieldOriented (the voices)", fieldOriented);
-        int i = 0;
-        for (SwerveModule mod : wheels) {
-            SmartDashboard.putNumber(
-                i + " mortal realm value",
-                mod.getAngleRelative()
-            );
-            i += 1;
-        }
-
         ChassisSpeeds speeds;
         if (fieldOriented) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
