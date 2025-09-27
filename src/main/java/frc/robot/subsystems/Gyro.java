@@ -1,38 +1,69 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+import static edu.wpi.first.units.Units.Degrees;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-//TODO Make extend subsystem-base (don't really need to)
-public class Gyro {
-    private Pigeon2 m_gyro = new Pigeon2(Constants.pigeonID);
+public class Gyro extends SubsystemBase {
+
+    /** Creates a new PigeonGyro. */
+    private final int pigeonDeviceID = Constants.pigeonID;
+    Pigeon2 pigeon2;
+    double gyroOffset = 0.0;
 
     public Gyro() {
-        zeroGyro();
+        pigeon2 = new Pigeon2(pigeonDeviceID, "rio");
     }
 
-    /**
-     * 
-     * @return raw gyro angle in degrees
-     */
-    public Rotation2d getGyroAngle() {
-        return Rotation2d.fromDegrees(MathUtil.inputModulus(m_gyro.getRotation2d().getDegrees(), -180, 180));
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        SmartDashboard.putNumber("PigeonGyro", getRawGyroAngle());
     }
 
-    public void zeroGyro() {
-        m_gyro.setYaw(0);
+    public void setGyroOffset(double offset) {
+        gyroOffset = offset;
     }
 
-    /**
-     * 
-     * @return gyro angle in degrees, clamped [0,360)
-     */
-    public double getGyroAngleClamped() {
-        // TODO check out what this function was for
+    public double getGyroOffset() {
+        return gyroOffset;
+    }
 
-        return MathUtil.inputModulus(m_gyro.getRotation2d().getDegrees(), 0 , 360);
+    public double getRawGyroAngle() {
+        return pigeon2.getYaw().getValue().in(Degrees) * -1;
+    }
+
+    public double getRealGyroAngle() {
+        double angle = (getRawGyroAngle() + gyroOffset) % 360;
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return angle;
+    }
+
+    public void resetGyro() {
+        pigeon2.reset();
+        gyroOffset = 0.0;
+    }
+
+    public double getPitch() {
+        return pigeon2.getPitch().getValue().in(Degrees) * -1;
+    }
+
+    public double getYaw() {
+        return pigeon2.getYaw().getValue().in(Degrees) * -1;
+    }
+
+    public double getRoll() {
+        return pigeon2.getRoll().getValue().in(Degrees) * -1;
     }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.controllers.XboxDriveController;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Gyro;
 
@@ -40,14 +41,7 @@ public class RobotContainer {
         // m_controller.b().onTrue(new ElevateUp(m_elevator));
 
         m_drive.setDefaultCommand(
-            new TeleopDrive(
-                () -> m_driver.getLeftY(),
-                () -> m_driver.getLeftX(),
-                () -> m_driver.getRightX(),
-                () -> m_driver.getAButton(),
-                m_drive,
-                m_gyro
-            )
+            new TeleopDrive(new XboxDriveController(m_driver), m_drive, m_gyro)
         );
 
         // m_controller.start().onTrue(new InstantCommand() {

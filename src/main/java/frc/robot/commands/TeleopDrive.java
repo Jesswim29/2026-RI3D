@@ -5,11 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.controllers.DriveController;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Gyro;
 import java.util.function.BooleanSupplier;
@@ -18,33 +20,20 @@ import java.util.function.DoubleSupplier;
 public class TeleopDrive extends Command {
 
     /** Creates a new TeleopDrive. */
-    private DoubleSupplier translation;
-    private DoubleSupplier strafe;
-    private DoubleSupplier rotation;
-    // The following is seemingly not being used anywhere
-    // TODO: Reimplement gyro zeroing (please for the love of something give this variable a sane name, not gyroResetButton)
-    private BooleanSupplier gyroResetButton;
+    private DriveController controller;
 
-    private Drive m_drive;
+    private Drive drive;
     private Gyro m_gyro;
 
-    public TeleopDrive(
-        DoubleSupplier translationBut,
-        DoubleSupplier strafeBut,
-        DoubleSupplier rotation,
-        BooleanSupplier a,
-        Drive drive,
-        Gyro gyro
-    ) {
-        // Use addRequirements() here to declare subsystem dependencies.
-        this.translation = translationBut;
-        this.strafe = strafeBut;
-        this.rotation = rotation;
-        this.gyroResetButton = a;
+    private double lastRightDirectional = 0;
+    private SlewRateLimiter rampRate;
 
-        m_drive = drive;
-        m_gyro = gyro;
-        addRequirements(m_drive);
+    public TeleopDrive(DriveController controller, Drive drive, Gyro gyro) {
+        this.controller = controller;
+        this.drive = drive;
+        this.m_gyro = gyro;
+        this.rampRate = new SlewRateLimiter(1);
+        addRequirements(drive);
     }
 
     // Called when the command is initially scheduled.
@@ -54,32 +43,72 @@ public class TeleopDrive extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double yVal = MathUtil.applyDeadband(
-            translation.getAsDouble(),
+        double stickX = MathUtil.applyDeadband(
+            controller.getDriveX(),
             Constants.kDeadzone
         );
 
-        double xVal = MathUtil.applyDeadband(
-            strafe.getAsDouble(),
+        double stickY = MathUtil.applyDeadband(
+            controller.getDriveY(),
             Constants.kDeadzone
         );
 
-        double rotVal = MathUtil.applyDeadband(
-            rotation.getAsDouble(),
+        double rotation = MathUtil.applyDeadband(
+            controller.getRotation(),
             Constants.kDeadzone
         );
-        SmartDashboard.putNumber("hell value", xVal);
-        SmartDashboard.putNumber("purgatory value", translation.getAsDouble());
-        // commented: see above
-        //if (gyroResetButton.getAsBoolean()) {
-        //    m_gyro.zeroGyro();
-        //}
 
-        m_drive.swerve(
-            new Translation2d(-yVal, -xVal).times(DrivetrainConstants.maxSpeed),
-            rotVal * DrivetrainConstants.maxTurningSpeed,
-            false
-        ); // TODO: Get this to work
+        double throttle = MathUtil.applyDeadband(
+            controller.getThrottle(),
+            Constants.kDeadzone
+        );
+
+        Translation2d rightCoordinate = new Translation2d(stickX, stickY);
+        double rightMagnitude =
+            (coordinateToMagnitude(rightCoordinate) + 360) % 360;
+        double rightDirectional =
+            (coordinateToAngle(rightCoordinate) + 360) % 360;
+
+        //Translation2d leftCoordinate = new Translation2d(rotation, throttle);
+        //double leftDirectional = coordinateToAngle(leftCoordinate);
+        double throttleValue = ((throttle + 1) / 2) + .1;
+
+        // make sure gyro isn't stupid
+        rightDirectional = rightDirectional - m_gyro.getRealGyroAngle();
+
+        double finalLinearMagnitude = rightMagnitude * throttleValue;
+        if (finalLinearMagnitude > 1) {
+            finalLinearMagnitude = 1;
+        } else {
+            finalLinearMagnitude = -1;
+        }
+
+        double rampedMagnitude = rampRate.calculate(finalLinearMagnitude);
+        double finalRotationMagnitude = rotation * throttleValue;
+        if (finalRotationMagnitude > 1) {
+            finalRotationMagnitude = 1;
+        } else {
+            finalRotationMagnitude = -1;
+        }
+
+        if (finalLinearMagnitude != 0 || finalRotationMagnitude != 0) {
+            drive.swerve(
+                rightDirectional,
+                rampedMagnitude,
+                finalRotationMagnitude
+            );
+            lastRightDirectional = rightDirectional;
+        } else {
+            drive.swerve(lastRightDirectional, 0, 0);
+        }
+    }
+
+    public double coordinateToAngle(Translation2d coordinate) {
+        return Math.toDegrees(Math.atan2(coordinate.getX(), coordinate.getY()));
+    }
+
+    public double coordinateToMagnitude(Translation2d coordinate) {
+        return Math.hypot(coordinate.getX(), coordinate.getY());
     }
 
     // Called once the command ends or is interrupted.

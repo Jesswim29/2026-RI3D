@@ -14,15 +14,13 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
 public class Wheel extends SubsystemBase {
-
-    double x;
-    double y;
 
     private final CANcoder canCoder;
     private final SparkMax driveMotor, steerMotor;
@@ -34,12 +32,12 @@ public class Wheel extends SubsystemBase {
 
     final SimpleMotorFeedforward feedForward;
 
+    public final Translation2d location;
     double encoderOffset;
     public boolean inverted;
 
     public Wheel(
-        final double x,
-        final double y,
+        final Translation2d location,
         final int driveID,
         final int steerID,
         final int encoderID,
@@ -56,6 +54,7 @@ public class Wheel extends SubsystemBase {
         driveEncoder = driveMotor.getEncoder();
         steerEncoder = steerMotor.getEncoder();
 
+        this.location = location;
         this.encoderOffset = encoderOffset;
         this.inverted = inverted;
 
