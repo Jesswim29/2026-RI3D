@@ -26,19 +26,19 @@ public class Drive extends SubsystemBase {
 
         // locations are also in terms of the wpilib coordinate system
         frontLeftLocation = new Translation2d(
-            -DrivetrainConstants.yOffsetMeters,
-            -DrivetrainConstants.xOffsetMeters
+            DrivetrainConstants.yOffsetMeters, //-
+            -DrivetrainConstants.xOffsetMeters 
         );
         frontRightLocation = new Translation2d(
-            -DrivetrainConstants.yOffsetMeters,
+            DrivetrainConstants.yOffsetMeters, //- 
             DrivetrainConstants.xOffsetMeters
         );
         backLeftLocation = new Translation2d(
-            DrivetrainConstants.yOffsetMeters,
+            -DrivetrainConstants.yOffsetMeters, //+
             -DrivetrainConstants.xOffsetMeters
         );
         backRightLocation = new Translation2d(
-            DrivetrainConstants.yOffsetMeters,
+            -DrivetrainConstants.yOffsetMeters, //+
             DrivetrainConstants.xOffsetMeters
         );
 
@@ -134,7 +134,7 @@ public class Drive extends SubsystemBase {
                 linearVector.getX() + rotationVector.getX(),
                 linearVector.getX() + rotationVector.getY()
             );
-            double resultSpeed = Math.hypot(resultXY.getY(), resultXY.getX());
+            double resultSpeed = Math.sqrt(Math.pow(resultXY.getX(), 2) + Math.pow(resultXY.getY(), 2));
             double resultAngle = getResultAngle(resultXY);
             calcWheelAngle[i] = resultAngle;
             calcWheelSpeed[i] = resultSpeed;
@@ -211,7 +211,7 @@ public class Drive extends SubsystemBase {
         if (rotation > 0) {
             // If rotating clockwise add 90 to alpha to get angle
             rotationAngle = alpha + 90;
-        } else {
+        } else if (rotation < 0){
             // If rotating counter clockwise subtract 90 from alpha to get angle
             rotationAngle = alpha - 90;
         }

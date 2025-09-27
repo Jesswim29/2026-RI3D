@@ -74,12 +74,12 @@ public class TeleopDrive extends Command {
         double throttleValue = ((throttle + 1) / 2) + .1;
 
         // make sure gyro isn't stupid
-        rightDirectional = rightDirectional - m_gyro.getRealGyroAngle();
+        // rightDirectional = rightDirectional - m_gyro.getRealGyroAngle();
 
         double finalLinearMagnitude = rightMagnitude * throttleValue;
         if (finalLinearMagnitude > 1) {
             finalLinearMagnitude = 1;
-        } else {
+        } else if (finalLinearMagnitude < -1) {
             finalLinearMagnitude = -1;
         }
 
@@ -87,9 +87,13 @@ public class TeleopDrive extends Command {
         double finalRotationMagnitude = rotation * throttleValue;
         if (finalRotationMagnitude > 1) {
             finalRotationMagnitude = 1;
-        } else {
+        } else if(finalRotationMagnitude < -1){
             finalRotationMagnitude = -1;
         }
+
+        SmartDashboard.putNumber("right dir", rightDirectional);
+        SmartDashboard.putNumber("ramp mag", rampedMagnitude);
+        SmartDashboard.putNumber("final rot", finalRotationMagnitude);
 
         if (finalLinearMagnitude != 0 || finalRotationMagnitude != 0) {
             drive.swerve(
@@ -101,6 +105,7 @@ public class TeleopDrive extends Command {
         } else {
             drive.swerve(lastRightDirectional, 0, 0);
         }
+        // drive.swerve(0, 0, 0);
     }
 
     public double coordinateToAngle(Translation2d coordinate) {
@@ -108,7 +113,7 @@ public class TeleopDrive extends Command {
     }
 
     public double coordinateToMagnitude(Translation2d coordinate) {
-        return Math.hypot(coordinate.getX(), coordinate.getY());
+        return Math.sqrt(Math.pow(coordinate.getX(), 2) + Math.pow(coordinate.getY(), 2));
     }
 
     // Called once the command ends or is interrupted.
