@@ -25,8 +25,8 @@ public class Gyro extends SubsystemBase {
             .getConfigurator()
             .apply(
                 new MountPoseConfigs()
-                    .withMountPosePitch(180)
-                    .withMountPoseYaw(90)
+                    .withMountPosePitch(90)
+                    .withMountPoseRoll(180)
             );
     }
 
