@@ -27,10 +27,10 @@ public class Drive extends SubsystemBase {
         // locations are also in terms of the wpilib coordinate system
         frontLeftLocation = new Translation2d(
             DrivetrainConstants.yOffsetMeters, //-
-            -DrivetrainConstants.xOffsetMeters 
+            -DrivetrainConstants.xOffsetMeters
         );
         frontRightLocation = new Translation2d(
-            DrivetrainConstants.yOffsetMeters, //- 
+            DrivetrainConstants.yOffsetMeters, //-
             DrivetrainConstants.xOffsetMeters
         );
         backLeftLocation = new Translation2d(
@@ -132,9 +132,11 @@ public class Drive extends SubsystemBase {
             );
             Translation2d resultXY = new Translation2d(
                 linearVector.getX() + rotationVector.getX(),
-                linearVector.getX() + rotationVector.getY()
+                linearVector.getY() + rotationVector.getY()
             );
-            double resultSpeed = Math.sqrt(Math.pow(resultXY.getX(), 2) + Math.pow(resultXY.getY(), 2));
+            double resultSpeed = Math.sqrt(
+                Math.pow(resultXY.getX(), 2) + Math.pow(resultXY.getY(), 2)
+            );
             double resultAngle = getResultAngle(resultXY);
             calcWheelAngle[i] = resultAngle;
             calcWheelSpeed[i] = resultSpeed;
@@ -156,6 +158,13 @@ public class Drive extends SubsystemBase {
             );
 
             SwerveModuleState optimizedState = wheel.bestAngle(inputState);
+            System.out.println(
+                "calc " +
+                    calcWheelAngle[i] +
+                    " opt " +
+                    optimizedState.angle.getDegrees()
+            );
+            System.out.println();
             wheel.setAngle(optimizedState.angle.getDegrees());
             wheel.setSpeed(optimizedState.speedMetersPerSecond);
 
@@ -211,7 +220,7 @@ public class Drive extends SubsystemBase {
         if (rotation > 0) {
             // If rotating clockwise add 90 to alpha to get angle
             rotationAngle = alpha + 90;
-        } else if (rotation < 0){
+        } else if (rotation < 0) {
             // If rotating counter clockwise subtract 90 from alpha to get angle
             rotationAngle = alpha - 90;
         }

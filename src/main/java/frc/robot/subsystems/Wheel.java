@@ -141,12 +141,12 @@ public class Wheel extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        // drivePID.setReference(
-        //     speed,
-        //     ControlType.kVelocity,
-        //     ClosedLoopSlot.kSlot0,
-        //     feedForward.calculate(speed)
-        // );
+        drivePID.setReference(
+            speed,
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0,
+            feedForward.calculate(speed)
+        );
         SmartDashboard.putNumber("Speed", speed);
     }
 
@@ -155,7 +155,7 @@ public class Wheel extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        // steerPID.setReference(angle, ControlType.kPosition);
+        steerPID.setReference(angle, ControlType.kPosition);
         SmartDashboard.putNumber("Angle", angle);
     }
 
