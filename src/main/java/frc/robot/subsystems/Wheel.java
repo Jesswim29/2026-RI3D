@@ -82,11 +82,11 @@ public class Wheel extends SubsystemBase {
 
         config.encoder
             .positionConversionFactor(
-                (Units.inchesToMeters(4) * Math.PI) / 6.75
+                DrivetrainConstants.DriveParams.positionConversionFactor
             )
             .velocityConversionFactor(
-                (Units.inchesToMeters(4) * Math.PI) / 6.75 / 60
-            ); // in meters per second
+                DrivetrainConstants.DriveParams.velocityConversionFactor
+            );
 
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -114,10 +114,13 @@ public class Wheel extends SubsystemBase {
                 DrivetrainConstants.freeLimit
             );
 
-        // todo: describe values
-        config.encoder.positionConversionFactor(28.13);
+        config.encoder.positionConversionFactor(DrivetrainConstants.SteerParams.steerConversionFactor); 
 
-        config.closedLoop.pid(0.025, 0, 0);
+        config.closedLoop.pid(
+            DrivetrainConstants.SteerParams.kP, 
+            DrivetrainConstants.SteerParams.kI, 
+            DrivetrainConstants.SteerParams.kD
+        );
 
         steerMotor.configure(
             config,

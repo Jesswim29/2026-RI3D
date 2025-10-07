@@ -25,7 +25,7 @@ public final class Constants {
     public static final class DrivetrainConstants {
 
         // public static final double maxSpeed = Units.feetToMeters(15.1);
-        public static final double maxSpeed = Units.feetToMeters(15);
+        public static final double maxSpeed = Units.feetToMeters(25);
 
         public static final int backLeftDriveID = 1;
         public static final int backLeftSteerID = 2;
@@ -60,15 +60,24 @@ public final class Constants {
             public static final double kD = 0;
             public static final double kFF = 1 / 473.0;
             public static final IdleMode kIdleMode = IdleMode.kBrake;
+
+            public static final double wheelRadius = 2; //in inches
+            public static final double wheelDiameter = wheelRadius * 2;
+            public static final double gearRatio = 6.75;
+            public static final double positionConversionFactor = wheelDiameter * Math.PI / gearRatio; //gear ratio of SDS mk4 L2
+            public static final double velocityConversionFactor = positionConversionFactor / 60;
         }
 
         public static final class SteerParams {
 
-            public static final double kP = 0.01;
+            public static final double kP = 0.025;
             public static final double kI = 0;
             public static final double kD = 0;
             public static final double kFF = 0;
             public static final IdleMode kIdleMode = IdleMode.kBrake;
+
+            //ask andrew for story time if you really want to know (YOU DONT) (TRUST ME JUST LEAVE IT BE) 🦀
+            public static final double steerConversionFactor = 28.13;
         }
     }
 }
