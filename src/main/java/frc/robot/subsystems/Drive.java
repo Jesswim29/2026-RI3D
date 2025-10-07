@@ -43,6 +43,15 @@ public class Drive extends SubsystemBase {
         );
 
         wheels = new Wheel[] {
+            /* back left */
+            new Wheel(
+                backLeftLocation,
+                DrivetrainConstants.backLeftDriveID,
+                DrivetrainConstants.backLeftSteerID,
+                DrivetrainConstants.backLeftCANCoderID,
+                DrivetrainConstants.backLeftEncoderOffset,
+                true
+            ),
             /* front left */
             new Wheel(
                 frontLeftLocation,
@@ -60,15 +69,6 @@ public class Drive extends SubsystemBase {
                 DrivetrainConstants.frontRightCANCoderID,
                 DrivetrainConstants.frontRightEncoderOffset,
                 false
-            ),
-            /* back left */
-            new Wheel(
-                backLeftLocation,
-                DrivetrainConstants.backLeftDriveID,
-                DrivetrainConstants.backLeftSteerID,
-                DrivetrainConstants.backLeftCANCoderID,
-                DrivetrainConstants.backLeftEncoderOffset,
-                true
             ),
             /* back right */
             new Wheel(
@@ -164,6 +164,7 @@ public class Drive extends SubsystemBase {
                     " opt " +
                     optimizedState.angle.getDegrees()
             );
+            SmartDashboard.putNumber("Wheel " + i, optimizedState.angle.getDegrees());
             wheel.setAngle(optimizedState.angle.getDegrees());
             wheel.setSpeed(optimizedState.speedMetersPerSecond);
 
