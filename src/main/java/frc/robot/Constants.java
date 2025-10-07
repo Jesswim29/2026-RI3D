@@ -55,10 +55,10 @@ public final class Constants {
 
         public static final class DriveParams {
 
-            public static final double kP = 0.1 / 4.0;
+            public static final double kP = 0.0000075;//.1/4.0
             public static final double kI = 0;
             public static final double kD = 0;
-            public static final double kFF = 1 / 473.0;
+            public static final double kFF = 1.0/473; //1/473
             public static final IdleMode kIdleMode = IdleMode.kBrake;
 
             public static final double wheelRadius = 2; //in inches
