@@ -114,9 +114,10 @@ public class Wheel extends SubsystemBase {
                 DrivetrainConstants.freeLimit
             );
 
-        config.encoder.positionConversionFactor((1 / 12.8) * 2 * Math.PI);
+        // todo: describe values
+        config.encoder.positionConversionFactor(28.13);
 
-        config.closedLoop.pid(0.5, 0, 0);
+        config.closedLoop.pid(0.025, 0, 0);
 
         steerMotor.configure(
             config,

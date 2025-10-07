@@ -164,7 +164,6 @@ public class Drive extends SubsystemBase {
                     " opt " +
                     optimizedState.angle.getDegrees()
             );
-            System.out.println();
             wheel.setAngle(optimizedState.angle.getDegrees());
             wheel.setSpeed(optimizedState.speedMetersPerSecond);
 
