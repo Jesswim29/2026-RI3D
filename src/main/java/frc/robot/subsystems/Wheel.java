@@ -28,22 +28,22 @@ public class Wheel extends SubsystemBase {
 
     private final RelativeEncoder driveEncoder, steerEncoder;
 
-    private final SparkClosedLoopController drivePID;
-    private final SparkClosedLoopController steerPID;
+    private SparkClosedLoopController drivePID;
+    private SparkClosedLoopController steerPID;
 
     final SimpleMotorFeedforward feedForward;
 
-    public final Translation2d location;
+    public Translation2d location;
     double encoderOffset;
     public boolean inverted;
 
     public Wheel(
-        final Translation2d location,
-        final int driveID,
-        final int steerID,
-        final int encoderID,
-        final double encoderOffset,
-        final boolean inverted
+        Translation2d location,
+        int driveID,
+        int steerID,
+        int encoderID,
+        double encoderOffset,
+        boolean inverted
     ) {
         canCoder = new CANcoder(encoderID);
         driveMotor = new SparkMax(driveID, MotorType.kBrushless);

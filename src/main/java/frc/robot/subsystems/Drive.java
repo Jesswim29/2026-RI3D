@@ -25,6 +25,10 @@ public class Drive extends SubsystemBase {
         m_Gyro = gyro;
 
         // locations are also in terms of the wpilib coordinate system
+        backLeftLocation = new Translation2d(
+            -DrivetrainConstants.yOffsetMeters, //+
+            -DrivetrainConstants.xOffsetMeters
+        );
         frontLeftLocation = new Translation2d(
             DrivetrainConstants.yOffsetMeters, //-
             -DrivetrainConstants.xOffsetMeters
@@ -32,10 +36,6 @@ public class Drive extends SubsystemBase {
         frontRightLocation = new Translation2d(
             DrivetrainConstants.yOffsetMeters, //-
             DrivetrainConstants.xOffsetMeters
-        );
-        backLeftLocation = new Translation2d(
-            -DrivetrainConstants.yOffsetMeters, //+
-            -DrivetrainConstants.xOffsetMeters
         );
         backRightLocation = new Translation2d(
             -DrivetrainConstants.yOffsetMeters, //+
