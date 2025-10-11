@@ -74,7 +74,7 @@ public class TeleopDrive extends Command {
         double throttleValue = ((throttle + 1) / 2) + .1;
 
         // make sure gyro isn't stupid
-        // rightDirectional = rightDirectional - m_gyro.getRealGyroAngle();
+        rightDirectional = rightDirectional - m_gyro.getRealGyroAngle();
 
         double finalLinearMagnitude = rightMagnitude * throttleValue;
         if (finalLinearMagnitude > 1) {
