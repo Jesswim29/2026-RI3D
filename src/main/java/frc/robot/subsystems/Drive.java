@@ -26,20 +26,20 @@ public class Drive extends SubsystemBase {
 
         // locations are also in terms of the wpilib coordinate system
         backLeftLocation = new Translation2d(
-            -DrivetrainConstants.yOffsetMeters, //+
-            -DrivetrainConstants.xOffsetMeters
+            -DrivetrainConstants.xOffsetMeters,
+            -DrivetrainConstants.yOffsetMeters //+
         );
         frontLeftLocation = new Translation2d(
-            DrivetrainConstants.yOffsetMeters, //-
-            -DrivetrainConstants.xOffsetMeters
+            -DrivetrainConstants.xOffsetMeters,
+            DrivetrainConstants.yOffsetMeters //-
         );
         frontRightLocation = new Translation2d(
-            DrivetrainConstants.yOffsetMeters, //-
-            DrivetrainConstants.xOffsetMeters
+            DrivetrainConstants.xOffsetMeters,
+            DrivetrainConstants.yOffsetMeters //-
         );
         backRightLocation = new Translation2d(
-            -DrivetrainConstants.yOffsetMeters, //+
-            DrivetrainConstants.xOffsetMeters
+            DrivetrainConstants.xOffsetMeters,
+            -DrivetrainConstants.yOffsetMeters //+
         );
 
         wheels = new Wheel[] {
@@ -164,7 +164,10 @@ public class Drive extends SubsystemBase {
                     " opt " +
                     optimizedState.angle.getDegrees()
             );
-            SmartDashboard.putNumber("Wheel " + i, optimizedState.angle.getDegrees());
+            SmartDashboard.putNumber(
+                "Wheel " + i,
+                optimizedState.angle.getDegrees()
+            );
             wheel.setAngle(optimizedState.angle.getDegrees());
             wheel.setSpeed(optimizedState.speedMetersPerSecond);
 
