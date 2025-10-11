@@ -13,6 +13,8 @@ import frc.robot.commands.TeleopDrive;
 import frc.robot.controllers.XboxDriveController;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.IGyro;
+import frc.robot.subsystems.NavxGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,7 +25,7 @@ import frc.robot.subsystems.Gyro;
 public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
-    public final Gyro m_gyro = new Gyro();
+    public final IGyro m_gyro = new NavxGyro();
     private final Drive m_drive = new Drive(m_gyro);
 
     private final XboxController m_driver = new XboxController(

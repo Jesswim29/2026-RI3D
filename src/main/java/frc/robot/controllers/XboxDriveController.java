@@ -11,7 +11,7 @@ public class XboxDriveController implements DriveController {
     }
 
     public double getDriveX() {
-        return -controller.getRightX();
+        return controller.getRightX();
     }
 
     public double getDriveY() {

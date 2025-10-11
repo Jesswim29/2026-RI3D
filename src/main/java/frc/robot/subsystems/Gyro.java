@@ -33,7 +33,8 @@ public class Gyro extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        SmartDashboard.putNumber("PigeonGyro", getRawGyroAngle());
+        SmartDashboard.putNumber("PigeonGyro RAW", getRawGyroAngle());
+        SmartDashboard.putNumber("PIGEON REAL REAL REAL REAL", getRealGyroAngle());
     }
 
     public void setGyroOffset(double offset) {

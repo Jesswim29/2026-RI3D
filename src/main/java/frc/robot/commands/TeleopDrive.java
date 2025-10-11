@@ -14,6 +14,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.controllers.DriveController;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.IGyro;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -23,12 +24,12 @@ public class TeleopDrive extends Command {
     private DriveController controller;
 
     private Drive drive;
-    private Gyro m_gyro;
+    private IGyro m_gyro;
 
     private double lastRightDirectional = 0;
     private SlewRateLimiter rampRate;
 
-    public TeleopDrive(DriveController controller, Drive drive, Gyro gyro) {
+    public TeleopDrive(DriveController controller, Drive drive, IGyro gyro) {
         this.controller = controller;
         this.drive = drive;
         this.m_gyro = gyro;

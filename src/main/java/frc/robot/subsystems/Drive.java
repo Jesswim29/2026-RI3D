@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.subsystems.IGyro;
 
 public class Drive extends SubsystemBase {
 
@@ -19,9 +20,9 @@ public class Drive extends SubsystemBase {
     private final Translation2d frontLeftLocation, frontRightLocation;
     private final Translation2d backLeftLocation, backRightLocation;
 
-    private final Gyro m_Gyro;
+    private final IGyro m_Gyro;
 
-    public Drive(Gyro gyro) {
+    public Drive(IGyro gyro) {
         m_Gyro = gyro;
 
         // locations are also in terms of the wpilib coordinate system
