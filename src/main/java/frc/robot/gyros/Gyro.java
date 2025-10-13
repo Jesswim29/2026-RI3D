@@ -1,8 +1,7 @@
-package frc.robot.subsystems;
+package frc.robot.gyros;
 
-public interface IGyro {
-
-    void resetGyro();
+public interface Gyro {
+    void zero();
 
     // sets the gyro offset in degrees
     void setGyroOffset(double offset);

@@ -1,46 +1,46 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.subsystems.IGyro;
+import frc.robot.gyros.Gyro;
 
 public class Drive extends SubsystemBase {
 
     public Wheel[] wheels;
 
     private double restAngle = 0;
-    private double normalizingFactor = 1;
     private final Translation2d frontLeftLocation, frontRightLocation;
     private final Translation2d backLeftLocation, backRightLocation;
 
-    private final IGyro m_Gyro;
+    // Remove the metadata if this variable actually gets used
+    // I am keeping it in as it will probably be useful during Ri3D
+    @SuppressWarnings("unused")
+    private final Gyro gyro;
 
-    public Drive(IGyro gyro) {
-        m_Gyro = gyro;
+    public Drive(Gyro gyro) {
+        this.gyro = gyro;
 
-        // locations are also in terms of the wpilib coordinate system
+        // These are **not** in wpilib's coordinate system
+        // in that we are XY instead of YX
         backLeftLocation = new Translation2d(
             -DrivetrainConstants.xOffsetMeters,
-            -DrivetrainConstants.yOffsetMeters //+
+            -DrivetrainConstants.yOffsetMeters
         );
         frontLeftLocation = new Translation2d(
             -DrivetrainConstants.xOffsetMeters,
-            DrivetrainConstants.yOffsetMeters //-
+            DrivetrainConstants.yOffsetMeters
         );
         frontRightLocation = new Translation2d(
             DrivetrainConstants.xOffsetMeters,
-            DrivetrainConstants.yOffsetMeters //-
+            DrivetrainConstants.yOffsetMeters
         );
         backRightLocation = new Translation2d(
             DrivetrainConstants.xOffsetMeters,
-            -DrivetrainConstants.yOffsetMeters //+
+            -DrivetrainConstants.yOffsetMeters
         );
 
         wheels = new Wheel[] {
@@ -84,9 +84,11 @@ public class Drive extends SubsystemBase {
     }
 
     /**
-     *
-     * @param translation   linear movement (meters/sec)
+     * Moves robot using swerve drive
+     * @param linearAngle   angle (degrees)
+     * @param linearSpeed   linear movement (meters/sec)
      * @param rotation      rotational magnitude (radians/sec)
+     * @param rotationPoint point of rotation in 2d space, can be inside or outside bot (x, y in meters)
      */
     public void swerve(
         double linearAngle,
@@ -176,6 +178,12 @@ public class Drive extends SubsystemBase {
         }
     }
 
+    /**
+     * Moves robot using swerve drive
+     * @param linearAngle   angle (degrees)
+     * @param linearSpeed   linear movement (meters/sec)
+     * @param rotation      rotational magnitude (radians/sec)
+     */
     public void swerve(
         double linearAngle,
         double linearSpeed,
@@ -184,16 +192,23 @@ public class Drive extends SubsystemBase {
         swerve(linearAngle, linearSpeed, rotation, new Translation2d(0, 0));
     }
 
-    public Translation2d getLinearVector(
-        double linearSpeed,
-        double linearAngle
-    ) {
+    /**
+     * Puts all wheels in a position where the robot cannot be moved
+     * Use only if funny
+     */
+    public void lockWheels() {
+        for (int i = 0; i < wheels.length; i++) {
+            wheels[i].setAngle((i + 45) * 90);
+        }
+    }
+
+    Translation2d getLinearVector(double linearSpeed, double linearAngle) {
         double linDeltaY = Math.cos(Math.toRadians(linearAngle)) * linearSpeed;
         double linDeltaX = Math.sin(Math.toRadians(linearAngle)) * linearSpeed;
         return new Translation2d(linDeltaX, linDeltaY);
     }
 
-    public double getRotationAngle(
+    double getRotationAngle(
         double deltaX,
         double deltaY,
         double linearAngle,
@@ -232,7 +247,7 @@ public class Drive extends SubsystemBase {
         return rotationAngle;
     }
 
-    public Translation2d getRotationVector(
+    Translation2d getRotationVector(
         double deltaX,
         double deltaY,
         double rotationAngle,
@@ -249,7 +264,7 @@ public class Drive extends SubsystemBase {
         return new Translation2d(rotationalSpeedX, rotationalSpeedY);
     }
 
-    public double getResultAngle(Translation2d resultXY) {
+    double getResultAngle(Translation2d resultXY) {
         double resultAngle = Math.toDegrees(
             Math.atan2(resultXY.getY(), resultXY.getX())
         );
@@ -261,22 +276,5 @@ public class Drive extends SubsystemBase {
             restAngle = resultAngle;
         }
         return resultAngle;
-    }
-
-    public void lockWheels() {
-        for (int i = 0; i < wheels.length; i++) {
-            wheels[i].setAngle((i + 45) * 90);
-        }
-    }
-
-    public void goToAngle(double ang) {
-        // TODO: impl
-        /**
-        for (SwerveModule curMod : wheels) {
-           curMod.setDesiredState(
-                new SwerveModuleState(0d, Rotation2d.fromDegrees(ang))
-            );
-        }
-        */
     }
 }

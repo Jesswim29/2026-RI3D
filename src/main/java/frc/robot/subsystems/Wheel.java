@@ -26,7 +26,7 @@ public class Wheel extends SubsystemBase {
     private final CANcoder canCoder;
     private final SparkMax driveMotor, steerMotor;
 
-    private final RelativeEncoder driveEncoder, steerEncoder;
+    private final RelativeEncoder driveEncoder;
 
     private SparkClosedLoopController drivePID;
     private SparkClosedLoopController steerPID;
@@ -53,7 +53,6 @@ public class Wheel extends SubsystemBase {
         steerPID = steerMotor.getClosedLoopController();
 
         driveEncoder = driveMotor.getEncoder();
-        steerEncoder = steerMotor.getEncoder();
 
         this.location = location;
         this.encoderOffset = encoderOffset;
@@ -114,11 +113,13 @@ public class Wheel extends SubsystemBase {
                 DrivetrainConstants.freeLimit
             );
 
-        config.encoder.positionConversionFactor(DrivetrainConstants.SteerParams.steerConversionFactor); 
+        config.encoder.positionConversionFactor(
+            DrivetrainConstants.SteerParams.steerConversionFactor
+        );
 
         config.closedLoop.pid(
-            DrivetrainConstants.SteerParams.kP, 
-            DrivetrainConstants.SteerParams.kI, 
+            DrivetrainConstants.SteerParams.kP,
+            DrivetrainConstants.SteerParams.kI,
             DrivetrainConstants.SteerParams.kD
         );
 

@@ -8,13 +8,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.controllers.XboxDriveController;
+import frc.robot.gyros.Gyro;
+import frc.robot.gyros.NavxGyro;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Gyro;
-import frc.robot.subsystems.IGyro;
-import frc.robot.subsystems.NavxGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,14 +23,12 @@ import frc.robot.subsystems.NavxGyro;
 public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
-    public final IGyro m_gyro = new NavxGyro();
-    private final Drive m_drive = new Drive(m_gyro);
+    public final Gyro gyro = new NavxGyro();
+    private final Drive drive = new Drive(gyro);
 
-    private final XboxController m_driver = new XboxController(
+    private final XboxController driveController = new XboxController(
         Constants.kDriveController
     );
-    private final CommandXboxController op_controller =
-        new CommandXboxController(Constants.kButtonController);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -42,8 +38,12 @@ public class RobotContainer {
         // m_controller.a().onTrue(new ElevateDown(m_elevator));
         // m_controller.b().onTrue(new ElevateUp(m_elevator));
 
-        m_drive.setDefaultCommand(
-            new TeleopDrive(new XboxDriveController(m_driver), m_drive, m_gyro)
+        drive.setDefaultCommand(
+            new TeleopDrive(
+                new XboxDriveController(driveController),
+                drive,
+                gyro
+            )
         );
 
         // m_controller.start().onTrue(new InstantCommand() {

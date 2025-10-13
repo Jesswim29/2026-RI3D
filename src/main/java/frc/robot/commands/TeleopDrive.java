@@ -10,13 +10,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.controllers.DriveController;
+import frc.robot.gyros.Gyro;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Gyro;
-import frc.robot.subsystems.IGyro;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 public class TeleopDrive extends Command {
 
@@ -24,12 +20,12 @@ public class TeleopDrive extends Command {
     private DriveController controller;
 
     private Drive drive;
-    private IGyro m_gyro;
+    private Gyro m_gyro;
 
     private double lastRightDirectional = 0;
     private SlewRateLimiter rampRate;
 
-    public TeleopDrive(DriveController controller, Drive drive, IGyro gyro) {
+    public TeleopDrive(DriveController controller, Drive drive, Gyro gyro) {
         this.controller = controller;
         this.drive = drive;
         this.m_gyro = gyro;
@@ -88,7 +84,7 @@ public class TeleopDrive extends Command {
         double finalRotationMagnitude = rotation * throttleValue;
         if (finalRotationMagnitude > 1) {
             finalRotationMagnitude = 1;
-        } else if(finalRotationMagnitude < -1){
+        } else if (finalRotationMagnitude < -1) {
             finalRotationMagnitude = -1;
         }
 
@@ -114,7 +110,9 @@ public class TeleopDrive extends Command {
     }
 
     public double coordinateToMagnitude(Translation2d coordinate) {
-        return Math.sqrt(Math.pow(coordinate.getX(), 2) + Math.pow(coordinate.getY(), 2));
+        return Math.sqrt(
+            Math.pow(coordinate.getX(), 2) + Math.pow(coordinate.getY(), 2)
+        );
     }
 
     // Called once the command ends or is interrupted.
