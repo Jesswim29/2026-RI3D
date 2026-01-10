@@ -37,6 +37,15 @@ public class Wheel extends SubsystemBase {
     double encoderOffset;
     public boolean inverted;
 
+    /**
+     * Constructor? for the wheel object
+     * @param location The location of the wheel on the chassis
+     * @param driveID The ID of the drive motor
+     * @param steerID The ID of the Steer motor
+     * @param encoderID ID for the encoder me tinks
+     * @param encoderOffset Offset for the encoder
+     * @param inverted Boolean that determines wether or not the direction is reversed
+     */
     public Wheel(
         Translation2d location,
         int driveID,
@@ -67,7 +76,6 @@ public class Wheel extends SubsystemBase {
 
         zero();
     }
-
     private void configDrive() {
         var config = new SparkMaxConfig();
 
