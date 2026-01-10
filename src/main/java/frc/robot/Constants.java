@@ -26,7 +26,8 @@ public final class Constants {
     public static final class DrivetrainConstants {
 
         // public static final double maxSpeed = Units.feetToMeters(15.1);
-        public static final double maxSpeed = Units.feetToMeters(25);
+        // public static final double maxSpeed = Units.feetToMeters(25);
+        public static final double maxSpeed = 25;
 
         public static final int backLeftDriveID = 1;
         public static final int backLeftSteerID = 2;
@@ -52,7 +53,7 @@ public final class Constants {
         public static final double yOffsetMeters = Units.inchesToMeters(12.5);
 
         public static final int stallLimit = 60;
-        public static final int freeLimit = 20;
+        public static final int freeLimit = 40;
 
         public static final class DriveParams {
 
