@@ -25,25 +25,25 @@ public class NavxGyro extends SubsystemBase implements Gyro {
         gyroOffset = 0;
     }
 
-    // sets the gyro offset in degrees
+    /**sets the gyro offset in degrees */
     @Override
     public void setGyroOffset(double offset) {
         gyroOffset = offset;
     }
 
-    // gets the gyro offset in degrees
+    /** gets the gyro offset in degrees */
     @Override
     public double getGyroOffset() {
         return gyroOffset;
     }
 
-    // gets the raw angle of the gyro (degrees rotated from start NOT 0-360)
+    /** gets the raw angle of the gyro (degrees rotated from start NOT 0-360) */
     @Override
     public double getRawGyroAngle() {
         return gyro.getAngle();
     }
 
-    // gets the real 0-360 angle of the robot relative to start
+    /**gets the real 0-360 angle of the robot relative to start */
     @Override
     public double getRealGyroAngle() {
         double angle = (getRawGyroAngle() + gyroOffset) % 360;
@@ -71,7 +71,7 @@ public class NavxGyro extends SubsystemBase implements Gyro {
     }
 
     /**
-     * finds best angle of rotation to reach a given angle 0-360
+     * Finds best angle of rotation to reach a given angle 0-360
      *
      * @param wantedRotatation angle wanted to rotate (degrees)
      * @return the smallest possible angle to reach wanted angle
