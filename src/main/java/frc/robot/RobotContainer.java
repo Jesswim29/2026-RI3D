@@ -4,13 +4,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.controllers.DriveController;
 import frc.robot.controllers.SpektrumDriveController;
-import frc.robot.controllers.XboxDriveController;
 import frc.robot.gyros.Gyro;
 import frc.robot.gyros.NavxGyro;
 import frc.robot.subsystems.Drive;
@@ -24,18 +22,26 @@ import frc.robot.subsystems.Drive;
 public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
-    public final Gyro gyro = new NavxGyro();
+    private final Gyro gyro = new NavxGyro();
+    //new XboxDriveController(new XboxController(Constants.kDriveController)),
+    private final DriveController driveController = new SpektrumDriveController(
+        Constants.kDriveController
+    );
     private final Drive drive = new Drive(gyro);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        drive.setDefaultCommand(
-            new TeleopDrive(
-                //new XboxDriveController(new XboxController(Constants.kDriveController)),
-                new SpektrumDriveController(Constants.kDriveController),
-                drive,
-                gyro
-            )
-        );
+        drive.setDefaultCommand(new TeleopDrive(driveController, drive, gyro));
+
+        // Button mappings
+        bindButtons();
+    }
+
+    private void bindButtons() {
+        driveController.reset().onTrue(new ResetGyro(gyro));
+    }
+
+    public Command getAutonomousCommand() {
+        return null;
     }
 }

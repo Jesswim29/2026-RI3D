@@ -5,6 +5,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class SpektrumDriveController
     extends GenericHID
@@ -88,5 +89,9 @@ public class SpektrumDriveController
             return 0;
         }
         return (getRawAxis(SpektrumAxis.RotateAxis.value) * rotateFactor) * -1;
+    }
+
+    public Trigger reset() {
+        return new Trigger(() -> (getRawButton(SpektrumButton.Reset.value)));
     }
 }

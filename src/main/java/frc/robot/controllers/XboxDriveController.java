@@ -1,6 +1,7 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class XboxDriveController implements DriveController {
 
@@ -24,5 +25,9 @@ public class XboxDriveController implements DriveController {
 
     public double getThrottle() {
         return -controller.getLeftY();
+    }
+
+    public Trigger reset() {
+        return new Trigger(() -> false);
     }
 }
