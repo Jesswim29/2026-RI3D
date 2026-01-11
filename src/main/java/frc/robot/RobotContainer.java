@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.auton.BasicAuto;
 import frc.robot.controllers.DriveController;
+import frc.robot.controllers.OperatorController;
 import frc.robot.controllers.SpektrumDriveController;
+import frc.robot.controllers.XboxOperatorController;
 import frc.robot.gyros.Gyro;
 import frc.robot.gyros.NavxGyro;
 import frc.robot.subsystems.Drive;
@@ -28,6 +32,11 @@ public class RobotContainer {
     private final DriveController driveController = new SpektrumDriveController(
         Constants.kDriveController
     );
+
+    private final OperatorController operatorController =
+        new XboxOperatorController(
+            new XboxController(Constants.kOperatorController)
+        );
     private final Drive drive = new Drive(gyro);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -39,7 +48,12 @@ public class RobotContainer {
     }
 
     private void bindButtons() {
+        // Drive Controls
         driveController.reset().onTrue(new ResetGyro(gyro));
+
+        // Operator Controls
+        operatorController.extendIntake().onTrue(new ToggleIntake(true));
+        operatorController.retractIntake().onTrue(new ToggleIntake(false));
     }
 
     public Command getAutonomousCommand() {
