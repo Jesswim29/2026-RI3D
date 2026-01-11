@@ -12,11 +12,12 @@ import frc.robot.subsystems.Drive;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class DriveForward extends SequentialCommandGroup {
+public class BasicAuto extends SequentialCommandGroup {
 
-  public DriveForward(Drive drive, Gyro gyro) {
+  public BasicAuto(Drive drive, Gyro gyro) {
     addCommands(
-      new UniversalDriveCommand(drive, gyro, 0, 60, 0, 0.5)
+      new UniversalDriveCommand(drive, gyro, 180, 100, 0, 0.5),
+      new UniversalDriveCommand(drive, gyro, 37, 65, 180, 0.5)
     );
   }
 }

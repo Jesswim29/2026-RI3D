@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.Autons.BasicAuto;
 import frc.robot.commands.Autons.DriveForward;
 import frc.robot.controllers.DriveController;
 import frc.robot.controllers.SpektrumDriveController;
@@ -43,6 +44,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new DriveForward(drive, gyro);
+        return new BasicAuto(drive, gyro);
     }
 }
