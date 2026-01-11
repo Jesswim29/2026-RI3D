@@ -20,7 +20,7 @@ public class TeleopDrive extends Command {
     private DriveController controller;
 
     private Drive drive;
-    private Gyro m_gyro;
+    private Gyro gyro;
 
     private double lastRightDirectional = 0;
     private SlewRateLimiter rampRate;
@@ -34,7 +34,7 @@ public class TeleopDrive extends Command {
     public TeleopDrive(DriveController controller, Drive drive, Gyro gyro) {
         this.controller = controller;
         this.drive = drive;
-        this.m_gyro = gyro;
+        this.gyro = gyro;
         this.rampRate = new SlewRateLimiter(1);
         addRequirements(drive);
     }
@@ -78,8 +78,8 @@ public class TeleopDrive extends Command {
         double throttleValue = ((throttle + 1) / 2) + .1;
 
         // make sure gyro isn't stupid
-        rightDirectional = rightDirectional - m_gyro.getRealGyroAngle();
-        
+        rightDirectional = rightDirectional - gyro.getRealGyroAngle();
+
         double finalLinearMagnitude = rightMagnitude * throttleValue;
         if (finalLinearMagnitude > 1) {
             finalLinearMagnitude = 1;

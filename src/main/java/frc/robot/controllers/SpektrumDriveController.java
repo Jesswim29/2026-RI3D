@@ -88,7 +88,7 @@ public class SpektrumDriveController
         ) {
             return 0;
         }
-        return (getRawAxis(SpektrumAxis.RotateAxis.value) * rotateFactor) * -1;
+        return getRawAxis(SpektrumAxis.RotateAxis.value) * rotateFactor;
     }
 
     public Trigger reset() {
