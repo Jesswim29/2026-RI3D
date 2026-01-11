@@ -81,6 +81,17 @@ public final class Constants {
         }
     }
 
+    public static class LauncherConstants {
+        public static final int flywheel1 = 20;
+        public static final int flywheel2 = 21;
+        public static final int feeder = 22;
+    }
+
+    public static class IntakeConstants {
+        public static final int intakePivot = 30;
+        public static final int intakeRoller = 31;
+    }
+
     //no touch please or bad things happen
     public static class DriveCommandConstants {
 
