@@ -24,7 +24,12 @@ public class TeleopDrive extends Command {
 
     private double lastRightDirectional = 0;
     private SlewRateLimiter rampRate;
-
+    /**
+     * Teleop drive constructor
+     * @param controller Controller object Xbox/Spektrum
+     * @param drive
+     * @param gyro 
+     */
     public TeleopDrive(DriveController controller, Drive drive, Gyro gyro) {
         this.controller = controller;
         this.drive = drive;
@@ -104,11 +109,19 @@ public class TeleopDrive extends Command {
         }
         // drive.swerve(0, 0, 0);
     }
-
+    /**
+     * Converts X and Y coordinates to angle
+     * @param coordinate Translation2d object containing X and Y value
+     * @return angle in DEGREES
+     */
     public double coordinateToAngle(Translation2d coordinate) {
         return Math.toDegrees(Math.atan2(coordinate.getX(), coordinate.getY()));
     }
-
+    /**
+     * Converts X and Y coordinates to length
+     * @param coordinate Translation2d object containing X and Y value
+     * @return Sum number units pending????
+     */
     public double coordinateToMagnitude(Translation2d coordinate) {
         return Math.sqrt(
             Math.pow(coordinate.getX(), 2) + Math.pow(coordinate.getY(), 2)
