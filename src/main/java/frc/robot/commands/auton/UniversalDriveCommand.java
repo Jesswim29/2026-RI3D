@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.auton;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -14,11 +10,10 @@ import frc.robot.gyros.Gyro;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Wheel;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class UniversalDriveCommand extends Command {
 
-    protected Drive _drive;
-    protected Gyro _gyro;
+    protected Drive drive;
+    protected Gyro gyro;
     protected Wheel[] _wheel;
 
     protected double encoderPosAvg;
@@ -32,7 +27,7 @@ public class UniversalDriveCommand extends Command {
     protected double speed;
     protected double calculateOutput;
     protected PIDController pidController;
-    protected SlewRateLimiter _slewRateLimiter;
+    protected SlewRateLimiter slewRateLimiter;
     protected double trapezoidalSpeed = 0;
     protected double stopPercent = 0;
     double rotateDist = 0;
@@ -57,8 +52,8 @@ public class UniversalDriveCommand extends Command {
         double rotationAngle,
         double speed
     ) {
-        _drive = drive;
-        _gyro = gyro;
+        drive = drive;
+        gyro = gyro;
         travelledDistance = 0;
         percentDone = 0;
         this.driveAngle = driveAngle;
@@ -71,7 +66,7 @@ public class UniversalDriveCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        _slewRateLimiter = new SlewRateLimiter(2.5); //2.5
+        slewRateLimiter = new SlewRateLimiter(2.5); //2.5
         //reset percent done and setup PID
         percentDone = 0;
         pidController = new PIDController(
@@ -83,18 +78,18 @@ public class UniversalDriveCommand extends Command {
 
         //find our start distance
         double startTick = 0;
-        Wheel[] wheels = _drive.getWheels();
+        Wheel[] wheels = drive.getWheels();
         for (int i = 0; i < wheels.length; i++) {
-            startTick += Math.abs(_drive.getWheels()[i].getDistance());
-            _drive.getWheels()[i].resetEncoders();
-            _drive.getWheels()[i].resetEncoders();
-            _drive.getWheels()[i].resetEncoders();
-            _drive.getWheels()[i].resetEncoders();
-            _drive.getWheels()[i].resetEncoders();
-            // startDist += Math.abs(_drive.getWheels()[i].getEncoderDistance());
+            startTick += Math.abs(drive.getWheels()[i].getDistance());
+            drive.getWheels()[i].resetEncoders();
+            drive.getWheels()[i].resetEncoders();
+            drive.getWheels()[i].resetEncoders();
+            drive.getWheels()[i].resetEncoders();
+            drive.getWheels()[i].resetEncoders();
+            // startDist += Math.abs(drive.getWheels()[i].getEncoderDistance());
         }
-        startTick = startTick / _drive.getWheels().length;
-        // startDist = startDist / _drive.getWheels().length;
+        startTick = startTick / drive.getWheels().length;
+        // startDist = startDist / drive.getWheels().length;
         System.out.println("Start dist: " + startTick);
 
         //add our rotation distance to the total wanted distance
@@ -119,14 +114,14 @@ public class UniversalDriveCommand extends Command {
     @Override
     public void execute() {
         //tell the robot what angle to drive at (subtract real gyro angle for field oriented driving)
-        finalDriveAngle = driveAngle - _gyro.getRealGyroAngle();
+        finalDriveAngle = driveAngle - gyro.getRealGyroAngle();
 
         //Get all wheels encoders and average them to find our distance
         encoderPosAvg = 0;
-        for (int i = 0; i < _drive.getWheels().length; i++) {
-            encoderPosAvg += Math.abs(_drive.getWheels()[i].getDistance());
+        for (int i = 0; i < drive.getWheels().length; i++) {
+            encoderPosAvg += Math.abs(drive.getWheels()[i].getDistance());
         }
-        encoderPosAvg = encoderPosAvg / _drive.getWheels().length;
+        encoderPosAvg = encoderPosAvg / drive.getWheels().length;
         // encoderPosAvg =- startDist;
 
         //TODO trapezoid + slew rate limit???
@@ -141,15 +136,14 @@ public class UniversalDriveCommand extends Command {
 
         //calculate rotation speed based on angle difference
         double rotationSpeed;
-        // rotationSpeed = (rotationAngle - _gyro.getRealGyroAngle()) * .0025;
+        // rotationSpeed = (rotationAngle - gyro.getRealGyroAngle()) * .0025;
         rotationSpeed =
             (rotationAngle -
-                ((_gyro.getRawGyroAngle() + _gyro.getGyroOffset()) % 360)) *
+                ((gyro.getRawGyroAngle() + gyro.getGyroOffset()) % 360)) *
             .0025;
         if (rotationSpeed > .20) {
             rotationSpeed = .20;
-        }
-        if (rotationSpeed < -.20) {
+        } else if (rotationSpeed < -.20) {
             rotationSpeed = -.20;
         }
         SmartDashboard.putNumber(
@@ -159,16 +153,11 @@ public class UniversalDriveCommand extends Command {
         SmartDashboard.putNumber("encoderPosAvg", encoderPosAvg);
 
         //send our linear angle, linear speed, and rotation speed to drive
-        _drive.swerve(finalDriveAngle, rampedOutput, rotationSpeed);
+        drive.swerve(finalDriveAngle, rampedOutput, rotationSpeed);
 
-        if (
-            _gyro.getRealGyroAngle() > (rotationAngle - 1) &&
-            _gyro.getRealGyroAngle() < (rotationAngle + 1)
-        ) {
-            atAngle = true;
-        } else {
-            atAngle = false;
-        }
+        atAngle =
+            gyro.getRealGyroAngle() > (rotationAngle - 1) &&
+            gyro.getRealGyroAngle() < (rotationAngle + 1);
 
         //calculate percent done
         // percentDone = Math.abs(Math.abs(encoderPosAvg - startDist) / wantedDistance);
@@ -194,16 +183,15 @@ public class UniversalDriveCommand extends Command {
             //.7
             trapezoidalSpeed = .1;
         }
-        finalSpeed = _slewRateLimiter.calculate(trapezoidalSpeed);
+        finalSpeed = slewRateLimiter.calculate(trapezoidalSpeed);
         return finalSpeed;
     }
 
     public double rotateAccomidation(Wheel[] wheels) {
         //find the angle to rotate to using best angle and the current angle using gyro
-        double angleUse = bestAngle(rotationAngle);
-        SmartDashboard.putNumber("best angle?", angleUse);
-        // double currentAng = _gyro.getRealGyroAngle();
-        double currentAng = ((_gyro.getRawGyroAngle() + _gyro.getGyroOffset()) %
+        SmartDashboard.putNumber("best angle?", rotationAngle);
+        // double currentAng = gyro.getRealGyroAngle();
+        double currentAng = ((gyro.getRawGyroAngle() + gyro.getGyroOffset()) %
             360);
 
         //math to calculate the circumference of the circle drawn by the wheels of the bot when rotating.
@@ -214,22 +202,11 @@ public class UniversalDriveCommand extends Command {
         SmartDashboard.putNumber("Circ", circumference);
 
         //calculate how far the wheels travel based off the percent of 360 we travel times circumference
-        SmartDashboard.putNumber("travel", angleUse - currentAng);
+        SmartDashboard.putNumber("travel", rotationAngle - currentAng);
         double rotationDistance =
-            circumference * ((angleUse - currentAng) / 360);
+            circumference * ((rotationAngle - currentAng) / 360);
         SmartDashboard.putNumber("rotate distance accom", rotationDistance);
         return Math.abs(rotationDistance);
-    }
-
-    //TODO IMPROVED BEST ANGLE
-    private double bestAngle(double angle) {
-        // angle = angle % 360;
-        // if (angle > 180) {
-        //     angle = angle - 360;
-        // } else if (angle < -180) {
-        //     angle = angle + 360;
-        // }
-        return angle;
     }
 
     // Called once the command ends or is interrupted.
@@ -240,15 +217,12 @@ public class UniversalDriveCommand extends Command {
             encoderPosAvg
         );
         System.out.println("FINAL POSITION OF THE COMMAND: " + encoderPosAvg);
-        _drive.swerve(0, 0, 0);
+        drive.swerve(0, 0, 0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (percentDone >= 1) {
-            return true;
-        }
-        return false;
+        return percentDone >= 1;
     }
 }
