@@ -24,11 +24,12 @@ public class TeleopDrive extends Command {
 
     private double lastRightDirectional = 0;
     private SlewRateLimiter rampRate;
+
     /**
      * Teleop drive constructor
      * @param controller Controller object Xbox/Spektrum
      * @param drive
-     * @param gyro 
+     * @param gyro
      */
     public TeleopDrive(DriveController controller, Drive drive, Gyro gyro) {
         this.controller = controller;
@@ -45,21 +46,22 @@ public class TeleopDrive extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double stickX = MathUtil.applyDeadband(
-            controller.getDriveX(),
-            Constants.kDeadzone
-        );
+        var xCon = controller.getDriveX();
+        SmartDashboard.putNumber("xCon", xCon);
+        double stickX = MathUtil.applyDeadband(xCon, Constants.kDeadzone);
 
-        double stickY = MathUtil.applyDeadband(
-            controller.getDriveY(),
-            Constants.kDeadzone
-        );
-
+        var yCon = controller.getDriveY();
+        SmartDashboard.putNumber("yCon", yCon);
+        double stickY = MathUtil.applyDeadband(yCon, Constants.kDeadzone);
+        var rotationCon = controller.getRotation();
+        SmartDashboard.putNumber("rotationCon", rotationCon);
         double rotation = MathUtil.applyDeadband(
             controller.getRotation(),
             Constants.kDeadzone
         );
 
+        var throttleCon = controller.getThrottle();
+        SmartDashboard.putNumber("throttleCon", throttleCon);
         double throttle = MathUtil.applyDeadband(
             controller.getThrottle(),
             Constants.kDeadzone
@@ -109,6 +111,7 @@ public class TeleopDrive extends Command {
         }
         // drive.swerve(0, 0, 0);
     }
+
     /**
      * Converts X and Y coordinates to angle
      * @param coordinate Translation2d object containing X and Y value
@@ -117,6 +120,7 @@ public class TeleopDrive extends Command {
     public double coordinateToAngle(Translation2d coordinate) {
         return Math.toDegrees(Math.atan2(coordinate.getX(), coordinate.getY()));
     }
+
     /**
      * Converts X and Y coordinates to length
      * @param coordinate Translation2d object containing X and Y value
