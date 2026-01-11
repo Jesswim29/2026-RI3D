@@ -14,5 +14,10 @@
 | Front Right CANCoder | 11 |
 | Back Left CANCoder | 12 |
 | Pigeon (Gyro) | 13 |
+| Flywheel 1 | 20 |
+| Flywheel 2 | 21 |
+| Feeder | 22 |
+| Intake Pivot | 30 |
+| Intake Rollers | 31 |
 | PDP | 63 |
 
