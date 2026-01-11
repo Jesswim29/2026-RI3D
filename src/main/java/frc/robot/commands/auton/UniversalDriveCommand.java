@@ -52,10 +52,10 @@ public class UniversalDriveCommand extends Command {
         double rotationAngle,
         double speed
     ) {
-        drive = drive;
-        gyro = gyro;
-        travelledDistance = 0;
-        percentDone = 0;
+        this.drive = drive;
+        this.gyro = gyro;
+        this.travelledDistance = 0;
+        this.percentDone = 0;
         this.driveAngle = driveAngle;
         this.rotationAngle = rotationAngle;
         this.wantedDistance = wantedDistance;
