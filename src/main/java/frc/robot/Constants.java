@@ -82,4 +82,15 @@ public final class Constants {
             public static final double steerConversionFactor = 28.13;
         }
     }
+
+    //no touch please or bad things happen
+    public static class DriveCommandConstants {
+
+        public static final double P = 0.024;//.0024
+        public static final double I = 0;
+        public static final double D = 0;
+    
+        public static final double P2 = .04;
+        public static final double I2 = .00012;
+    }
 }

@@ -307,4 +307,8 @@ public class Drive extends SubsystemBase {
         }
         return resultAngle;
     }
+
+    public Wheel[] getWheels() {
+        return wheels;
+      }
 }

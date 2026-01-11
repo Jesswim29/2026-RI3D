@@ -172,7 +172,7 @@ public class Wheel extends SubsystemBase {
         SmartDashboard.putNumber("Angle", angle);
     }
 
-    private void resetEncoders() {
+    public void resetEncoders() {
         driveEncoder.setPosition(0);
     }
 
@@ -229,6 +229,14 @@ public class Wheel extends SubsystemBase {
             )
         );
     }
+
+    public double get_xPos() {
+        return location.getX();
+      }
+    
+      public double get_yPos() {
+        return location.getY();
+      }
 
     public void stopMotors() {
         driveMotor.stopMotor();
