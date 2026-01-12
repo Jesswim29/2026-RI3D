@@ -87,6 +87,8 @@ public final class Constants {
         public static final double P = 0;
         public static final double I = 0;
         public static final double D = 0;
+        public static final double FF = 0;
+        public static final double maxHeight;
     }
 
     public static class LauncherConstants {
