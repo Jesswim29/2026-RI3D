@@ -1,18 +1,14 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberParams;
 
@@ -31,22 +27,28 @@ import frc.robot.Constants.ClimberParams;
  */
 
 public class Climb extends SubsystemBase {
+
     private final SparkMax leftMotor; //SM 40
-    private final SparkMax rightMotor;  //SM 41
-    
+    private final SparkMax rightMotor; //SM 41
+
     private SparkClosedLoopController leftPID, rightPID;
     private final RelativeEncoder leftEncoder, rightEncoder;
     private final DutyCycleEncoder leftAbsEncoder, rightAbsEncoder;
 
-
-    public Climb(int leftID, int rightID){
-        leftMotor = new SparkMax(Constants.ClimberParams.leftClimber, MotorType.kBrushless);
-        rightMotor = new SparkMax(Constants.ClimberParams.rightClimber, MotorType.kBrushless);
+    public Climb() {
+        leftMotor = new SparkMax(
+            Constants.ClimberParams.leftID,
+            MotorType.kBrushless
+        );
+        rightMotor = new SparkMax(
+            Constants.ClimberParams.rightID,
+            MotorType.kBrushless
+        );
         leftAbsEncoder = new DutyCycleEncoder(0);
         rightAbsEncoder = new DutyCycleEncoder(0);
 
-        leftPID = LeftClimber.getClosedLoopController();
-        rightPID = RightClimber.getClosedLoopController();
+        leftPID = leftMotor.getClosedLoopController();
+        rightPID = rightMotor.getClosedLoopController();
 
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
@@ -54,72 +56,53 @@ public class Climb extends SubsystemBase {
         configMotor();
     }
 
-
-    public void extendClimber(int ID){
-        if(ID == Constants.ClimberParams.leftClimber){
-            
-        }
-        else if(ID == Constants.ClimberParams.rightClimber){
-            
-        }
-        else
-            throw new IllegalArgumentException();
+    public void extendClimber(int id) {
+        if (id == Constants.ClimberParams.leftID) {
+        } else if (id == Constants.ClimberParams.rightID) {
+        } else throw new IllegalArgumentException();
     }
 
-
-    public double getAbsoluteClimberPos(int ID){
-        if(ID == Constants.ClimberParams.leftClimber){
+    public double getAbsoluteClimberPos(int id) {
+        if (id == Constants.ClimberParams.leftID) {
             return leftAbsEncoder.get();
-        }
-        else if(ID == Constants.ClimberParams.rightClimber){
+        } else if (id == Constants.ClimberParams.rightID) {
             return rightAbsEncoder.get();
-        }
-        else
-            throw new IllegalArgumentException();
+        } else throw new IllegalArgumentException();
     }
 
-    public double getClimberPos(int ID){
-        if(ID == Constants.ClimberParams.leftClimber){
+    public double getClimberPos(int id) {
+        if (id == Constants.ClimberParams.rightID) {
             return leftEncoder.getPosition();
-        }
-        else if(ID == Constants.ClimberParams.rightClimber){
+        } else if (id == Constants.ClimberParams.leftID) {
             return rightEncoder.getPosition();
-        }
-        else
-            throw new IllegalArgumentException();
+        } else throw new IllegalArgumentException();
     }
 
-    /** 
+    /**
      * @param height encoder val for pos
      */
-    public double setClimberPos(int ID, double height){
-        if(ID == Constants.ClimberParams.leftClimber){
+    public void setClimberPos(int id, double height) {
+        if (id == Constants.ClimberParams.leftID) {
             leftPID.setReference(height, ControlType.kPosition);
-        }
-        else if(ID == Constants.ClimberParams.rightClimber){
+        } else if (id == Constants.ClimberParams.rightID) {
             rightPID.setReference(height, ControlType.kPosition);
-        }
-        else
-            throw new IllegalArgumentException();
+        } else throw new IllegalArgumentException();
     }
 
-    /** 
+    /**
      * @param percent percent -1 to 1 to run the motor at
      */
-    public void setClimberSpeed(double percent){
+    public void setClimberSpeed(double percent) {
         leftMotor.set(percent);
         rightMotor.set(percent);
     }
 
-    public void periodic() {
-    }
+    public void periodic() {}
 
-    private void configMotor(){
+    private void configMotor() {
         var config = new SparkMaxConfig();
 
-        config.encoder
-            .positionConversionFactor(0)
-            .velocityConversionFactor(0);
+        config.encoder.positionConversionFactor(0).velocityConversionFactor(0);
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(
