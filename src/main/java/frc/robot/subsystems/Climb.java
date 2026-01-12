@@ -1,12 +1,16 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.fasterxml.jackson.databind.ser.PropertyBuilder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -29,6 +33,7 @@ public class Climb extends SubsystemBase {
         LeftPID = LeftClimber.getClosedLoopController();
         RightPID = RightClimber.getClosedLoopController();
 
+
         configMotor();
     }
 
@@ -48,5 +53,21 @@ public class Climb extends SubsystemBase {
                 ClimberParams.I,
                 ClimberParams.D
             );
+    }
+
+    public void setPosition(SparkClosedLoopController PID, double distance) {
+        //Sets the position of either motor to the specified distance
+        PID.setReference(distance, ControlType.kPosition);
+
+    }
+    public double getPosition(SparkMax motor) {
+        return motor.getEncoder().getPosition();
+        
+    }
+    public void resetEncoders() {
+        
+    }
+    public void stopMotors(SparkMax motor) {
+        motor.set(0);
     }
 }
