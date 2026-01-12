@@ -8,6 +8,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -41,7 +43,7 @@ public class Intake extends SubsystemBase{
         pivotConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
             .pidf(
-                Constants.IntakeConstants.kP, 
+                Constants.IntakeConstants.kP,  //TODO PID Values
                 Constants.IntakeConstants.kI,
                 Constants.IntakeConstants.kD,
                 Constants.IntakeConstants.kFF
