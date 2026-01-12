@@ -37,22 +37,13 @@ public class Wheel extends SubsystemBase {
     double encoderOffset;
     public boolean inverted;
 
-    /**
-     * Constructor? for the wheel object
-     * @param location The location of the wheel on the chassis
-     * @param driveID The ID of the drive motor
-     * @param steerID The ID of the Steer motor
-     * @param encoderID ID for the encoder me tinks
-     * @param encoderOffset Offset for the encoder
-     * @param inverted Boolean that determines wether or not the direction is reversed
-     */
     public Wheel(
-        Translation2d location,
-        int driveID,
-        int steerID,
-        int encoderID,
-        double encoderOffset,
-        boolean inverted
+        Translation2d location, //The location of the wheel on the chassis
+        int driveID,    //The ID of the drive motor
+        int steerID,    //The ID of the Steer motor
+        int encoderID,  //The absolute encoder ID
+        double encoderOffset, //Offset for the encoder
+        boolean inverted //Boolean that determines if direction is reversed
     ) {
         canCoder = new CANcoder(encoderID);
         driveMotor = new SparkMax(driveID, MotorType.kBrushless);
@@ -67,7 +58,7 @@ public class Wheel extends SubsystemBase {
         this.encoderOffset = encoderOffset;
         this.inverted = inverted;
 
-        // ks is the minimum amount of volts to make the motor barely move, kv was gotten from #0 who got it from neo docs
+        //ks is the minimum volts to make the motor barely move, kv is from neo docs
         feedForward = new SimpleMotorFeedforward(0.12, .473);
 
         configSteer();
