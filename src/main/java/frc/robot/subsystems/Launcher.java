@@ -34,7 +34,7 @@ public class Launcher extends SubsystemBase {
     
         feedForward = new SimpleMotorFeedforward(0.12, .473);
         
-
+        configMotors();
         
     }
     private void configMotors(){
