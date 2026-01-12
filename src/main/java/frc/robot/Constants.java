@@ -90,6 +90,11 @@ public final class Constants {
     public static class IntakeConstants {
         public static final int intakePivot = 30;
         public static final int intakeRoller = 31;
+        public static final int intakeConversionFactor = 25;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kFF = 0;
     }
 
     //no touch please or bad things happen
