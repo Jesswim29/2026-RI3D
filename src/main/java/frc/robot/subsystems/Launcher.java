@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -23,15 +24,12 @@ public class Launcher extends SubsystemBase {
     private final SparkMax Follower;
     private final SparkClosedLoopController LeadPID;
     final SimpleMotorFeedforward feedForward;
-    public Launcher(int Fly1, int Fly2) {
-
+    public Launcher() {
         //Configuring Lead sparkmax motorcontroller
-        Leader = new SparkMax(Fly1, MotorType.kBrushless);
-        
+        Leader = new SparkMax(Constants.LauncherConstants.flywheel1, MotorType.kBrushless);
         LeadPID = Leader.getClosedLoopController();
-
-        Follower = new SparkMax(Fly2, MotorType.kBrushless);
-    
+        Follower = new SparkMax(Constants.LauncherConstants.flywheel2, MotorType.kBrushless);
+        //Setting feedforwardrate
         feedForward = new SimpleMotorFeedforward(0.12, .473);
         
         configMotors();
@@ -44,7 +42,7 @@ public class Launcher extends SubsystemBase {
         .velocityConversionFactor(0);
 
         LeadConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(0, 0, 0, 0);
+        .pid(Constants.LauncherConstants.flykP, Constants.LauncherConstants.flykI, Constants.LauncherConstants.flykD);
 
         Leader.configure(LeadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
