@@ -19,5 +19,7 @@
 | Feeder | 22 |
 | Intake Pivot | 30 |
 | Intake Rollers | 31 |
+| ClimberLeft | 40 |
+| ClimberRight | 41 |
 | PDP | 63 |
 
