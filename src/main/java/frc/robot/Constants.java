@@ -82,20 +82,25 @@ public final class Constants {
     }
 
     public static class ClimberParams {
-        public static final int leftClimber = 40;
-        public static final int rightClimber = 41;
+
+        public static final int leftID = 40;
+        public static final int rightID = 41;
         public static final double P = 0;
         public static final double I = 0;
         public static final double D = 0;
+        public static final double FF = 0;
+        //public static final double maxHeight = ;
     }
 
     public static class LauncherConstants {
+
         public static final int flywheel1 = 20;
         public static final int flywheel2 = 21;
         public static final int feeder = 22;
     }
 
     public static class IntakeConstants {
+
         public static final int intakePivot = 30;
         public static final int intakeRoller = 31;
         public static final int intakeConversionFactor = 25;
