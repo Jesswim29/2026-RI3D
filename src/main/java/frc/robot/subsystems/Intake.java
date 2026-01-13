@@ -41,7 +41,7 @@ public class Intake extends SubsystemBase{
         SparkMaxConfig rollerConfig = new SparkMaxConfig();
 
         pivotConfig
-            .idleMode(IdleMode.kCoast) //change to brake later
+            .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(20,20)
             .inverted(false);
         // pivotConfig.closedLoop

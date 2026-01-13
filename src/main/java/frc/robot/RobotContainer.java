@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ClimbUpDown;
+import frc.robot.commands.IntakeIn;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ToggleIntake;
@@ -71,13 +72,15 @@ public class RobotContainer {
         
         // Operator Controls
         operatorController.extendIntake().whileTrue(new ToggleIntake(true, intake));
-        operatorController.retractIntake().whileTrue(new ToggleIntake(false, intake));
-    }
+        // operatorController.retractIntake().whileTrue(new ToggleIntake(false, intake));
+        operatorController.retractIntake().whileTrue(new IntakeIn(false, intake));
 
         // Launcher subcommands
         operatorController.toggleFeeder().whileTrue(new ToggleFeed(feed, true));
         operatorController.launch().whileTrue(new ToggleShoot(launcher, true));
     }
+
+        
     public Command getAutonomousCommand() {
         return new BasicAuto(drive, gyro);
     }
