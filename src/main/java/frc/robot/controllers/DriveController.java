@@ -17,4 +17,8 @@ public interface DriveController {
     public double getThrottle();
 
     public Trigger reset();
+    public Trigger leftArmUp();
+    public Trigger leftArmDown();
+    public Trigger rightArmUp();
+    public Trigger rightArmDown();
 }
