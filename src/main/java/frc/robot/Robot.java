@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // System.out.println("Throwing it at the wall " + m_robotContainer.gyro.getGyroAngleClamped());
+        
     }
 
     @Override
