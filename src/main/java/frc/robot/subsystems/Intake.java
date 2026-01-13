@@ -17,22 +17,19 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase.ControlType;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
-import edu.wpi.first.math.controller.PIDController;
 
 public class Intake extends SubsystemBase{
     private final SparkMax pivotMotor, rollerMotor;
     private final DutyCycleEncoder pivotAbsEncoder;
     private RelativeEncoder pivotEncoder;
-    // private SparkClosedLoopController pivotPID;
+    private SparkClosedLoopController pivotPID;
 
 
     public Intake(){
         pivotMotor = new SparkMax(Constants.IntakeConstants.intakePivot, MotorType.kBrushless);
         rollerMotor = new SparkMax(Constants.IntakeConstants.intakeRoller, MotorType.kBrushless);
 
-        // pivotPID = pivotMotor.getClosedLoopController();
-        
-        
+        pivotPID = pivotMotor.getClosedLoopController();
         pivotEncoder = pivotMotor.getEncoder();
 
         pivotAbsEncoder = new DutyCycleEncoder(2); //TODO pick port number
@@ -42,16 +39,15 @@ public class Intake extends SubsystemBase{
 
         pivotConfig
             .idleMode(IdleMode.kCoast) //change to brake later
-            .smartCurrentLimit(20,20)
-            .inverted(false);
-        // pivotConfig.closedLoop
-        //     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        //     .pidf(
-        //         Constants.IntakeConstants.kP,  //TODO PID Values
-        //         Constants.IntakeConstants.kI,
-        //         Constants.IntakeConstants.kD,
-        //         Constants.IntakeConstants.kFF
-        //     );
+            .smartCurrentLimit(20,20);
+        pivotConfig.closedLoop
+            .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+            .pidf(
+                Constants.IntakeConstants.kP,  //TODO PID Values
+                Constants.IntakeConstants.kI,
+                Constants.IntakeConstants.kD,
+                Constants.IntakeConstants.kFF
+            );
         pivotConfig.encoder
             .positionConversionFactor(
                 Constants.IntakeConstants.intakeConversionFactor
@@ -67,12 +63,11 @@ public class Intake extends SubsystemBase{
         pivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // initalize();
+        initalize();
     } 
 
     public void initalize(){
-        double startPos = getAbsolutePivotPos(); //TODO constant and explain this later
-        pivotEncoder.setPosition((startPos - 32) * 360);
+        
     }
 
     /** 
@@ -89,11 +84,7 @@ public class Intake extends SubsystemBase{
 
     public void setPivotPos(double angle){
         // pivotPID.setReference(angle, ControlType.kPosition);
-        // SmartDashboard.putNumber("pivot angle: ", angle);
-    }
-
-    public void setPivotSpeed(double speed){
-        pivotMotor.set(speed);
+        SmartDashboard.putNumber("pivot angle: ", angle);
     }
 
     //mult by 360 to get it in degrees instead of rotation
@@ -102,7 +93,7 @@ public class Intake extends SubsystemBase{
     }
 
     public double getPivotPos(){
-        return (pivotEncoder.getPosition());
+        return pivotEncoder.getPosition();
     }
 
     @Override

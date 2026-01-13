@@ -103,9 +103,8 @@ public final class Constants {
 
         public static final int intakePivot = 30;
         public static final int intakeRoller = 31;
-        //im going to explode death to this stupid number
-        public static final double intakeConversionFactor = 10;//((1.0/(25.0*42.0))*360);
-        public static final double kP = 0.00075;
+        public static final int intakeConversionFactor = 25;
+        public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kFF = 0;

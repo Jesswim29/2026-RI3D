@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.fasterxml.jackson.databind.ser.PropertyBuilder;
+=======
+>>>>>>> 54645851179fcc5e52bc29b0bf1d589932ac690e
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -12,13 +15,18 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
+<<<<<<< HEAD
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+=======
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+>>>>>>> 54645851179fcc5e52bc29b0bf1d589932ac690e
 import frc.robot.Constants.ClimberParams;
 
 /* TODO
@@ -68,17 +76,7 @@ public class Climb extends SubsystemBase {
 
     public void extendClimber(int id) {
         if (id == Constants.ClimberParams.leftID) {
-            leftMotor.set(0.2);
         } else if (id == Constants.ClimberParams.rightID) {
-            rightMotor.set(0.2);
-        } else throw new IllegalArgumentException();
-    }
-
-    public void retractClimber(int id){
-        if (id == Constants.ClimberParams.leftID) {
-            leftMotor.set(-0.2);
-        } else if (id == Constants.ClimberParams.rightID) {
-            rightMotor.set(-0.2);
         } else throw new IllegalArgumentException();
     }
 
@@ -117,14 +115,6 @@ public class Climb extends SubsystemBase {
         rightMotor.set(percent);
     }
 
-    public void stopClimber(int id){
-        if (id == Constants.ClimberParams.leftID) {
-            leftMotor.stopMotor();
-        } else if (id == Constants.ClimberParams.rightID) {
-            rightMotor.stopMotor();
-        } else throw new IllegalArgumentException();
-    }
-
     public void periodic() {}
 
     private void configMotor() {
@@ -140,6 +130,7 @@ public class Climb extends SubsystemBase {
                 ClimberParams.FF
             );
     }
+<<<<<<< HEAD
 
     public void setPosition(SparkClosedLoopController PID, double distance) {
         //Sets the position of either motor to the specified distance
@@ -157,3 +148,6 @@ public class Climb extends SubsystemBase {
         motor.set(0);
     }
 }
+=======
+}
+>>>>>>> 54645851179fcc5e52bc29b0bf1d589932ac690e
