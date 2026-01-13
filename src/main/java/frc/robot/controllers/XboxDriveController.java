@@ -30,4 +30,17 @@ public class XboxDriveController implements DriveController {
     public Trigger reset() {
         return new Trigger(() -> false);
     }
+
+    public Trigger leftArmUp() {
+        return new Trigger(() -> false);
+    }
+    public Trigger leftArmDown() {
+        return new Trigger(() -> false);
+    }
+    public Trigger rightArmUp() {
+        return new Trigger(() -> false);
+    }
+    public Trigger rightArmDown() {
+        return new Trigger(() -> false);
+    }
 }
