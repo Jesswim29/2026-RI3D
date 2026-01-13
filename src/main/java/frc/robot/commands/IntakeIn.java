@@ -12,6 +12,8 @@ public class IntakeIn extends Command {
     Intake intake;
     double speed = 0;
 
+    double point;
+
     private PIDController pivotPID;
 
     public IntakeIn(boolean extend, Intake intake) {
@@ -37,9 +39,12 @@ public class IntakeIn extends Command {
             // // intake.setPivotPos(120);
             // intake.setRollerSpeed(.25);//.5
         // } else {
+        // point = 30;
             pivotPID.setSetpoint(30);
             // intake.setPivotPos(30);
             intake.setRollerSpeed(0);
+
+            // speed = 1 - intake.getAbsolutePivotPos()/point * .5;
         // }
         speed = pivotPID.calculate(intake.getAbsolutePivotPos());
         intake.setPivotSpeed(speed);
@@ -51,6 +56,7 @@ public class IntakeIn extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        
         //empty
     }
 

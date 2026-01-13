@@ -12,6 +12,8 @@ public class ToggleIntake extends Command {
     Intake intake;
     double speed = 0;
 
+    double point;
+
     private PIDController pivotPID;
 
     public ToggleIntake(boolean extend, Intake intake) {
@@ -27,21 +29,30 @@ public class ToggleIntake extends Command {
 
     @Override
     public void initialize() {
-        
+        SmartDashboard.putBoolean("ASKJFBNBJKSABJFBHJSB JFHBSHJDBFBSHJAKFB", false);
     }
 
     @Override
     public void execute() {
         // if (extend) {
             pivotPID.setSetpoint(110);
+            // point = 110;
             // intake.setPivotPos(120);
             intake.setRollerSpeed(.25);//.5
+
+            // speed = 1 - intake.getAbsolutePivotPos()/point * .5;
+            // if(point > intake.getAbsolutePivotPos()){
+                
+            // }else{
+
+            // }
         // } else {
         //     pivotPID.setSetpoint(30);
         //     // intake.setPivotPos(30);
         //     intake.setRollerSpeed(0);
         // }
         speed = pivotPID.calculate(intake.getAbsolutePivotPos());
+        
         intake.setPivotSpeed(speed);
         SmartDashboard.putNumber("POSITION I HATE NUMEBRS", pivotPID.getSetpoint());
         SmartDashboard.putNumber("SPEED I HATE NUMEBRS", speed);
@@ -51,7 +62,7 @@ public class ToggleIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        //empty
+        SmartDashboard.putBoolean("ASKJFBNBJKSABJFBHJSB JFHBSHJDBFBSHJAKFB", true);
     }
 
     @Override

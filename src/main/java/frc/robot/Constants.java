@@ -106,9 +106,9 @@ public final class Constants {
         public static final int intakeRoller = 31;
         //im going to explode death to this stupid number
         public static final double intakeConversionFactor = 10;//((1.0/(25.0*42.0))*360);
-        public static final double kP = 0.001;
+        public static final double kP = 0.005;
         public static final double kI = 0;
-        public static final double kD = 0;
+        public static final double kD = 0.0025;
         public static final double kFF = 0;
     }
 

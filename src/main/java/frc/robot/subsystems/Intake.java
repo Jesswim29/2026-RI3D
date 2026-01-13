@@ -93,6 +93,11 @@ public class Intake extends SubsystemBase{
     }
 
     public void setPivotSpeed(double speed){
+        if(speed > .1){
+            speed = .1;
+        }else if(speed < -.1){
+            speed = -.1;
+        }
         pivotMotor.set(speed);
     }
 
