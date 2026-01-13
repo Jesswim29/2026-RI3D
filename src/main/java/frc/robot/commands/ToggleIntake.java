@@ -45,6 +45,8 @@ public class ToggleIntake extends Command {
         intake.setPivotSpeed(speed);
         SmartDashboard.putNumber("POSITION I HATE NUMEBRS", pivotPID.getSetpoint());
         SmartDashboard.putNumber("SPEED I HATE NUMEBRS", speed);
+        
+        System.out.println("SPEED I HATE NUMEBRS: " + speed);
     }
 
     @Override
@@ -54,6 +56,6 @@ public class ToggleIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }
