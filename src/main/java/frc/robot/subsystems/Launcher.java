@@ -31,7 +31,8 @@ public class Launcher extends SubsystemBase {
         Follower = new SparkMax(Constants.LauncherConstants.flywheel2, MotorType.kBrushless);
         //Setting feedforwardrate
         feedForward = new SimpleMotorFeedforward(0.12, .473);
-        
+
+        //Feed/Indexer/IDK motor 
         configMotors();
         
     }
@@ -62,8 +63,11 @@ public class Launcher extends SubsystemBase {
         return Leader.getEncoder().getVelocity();
 
     }
-    void setVelocity(double speed) {
+    public void setVelocity(double speed) {
         LeadPID.setReference(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0, feedForward.calculate(speed));
+    }
+    public void stopMotors(){
+        Leader.stopMotor();
     }
 
 

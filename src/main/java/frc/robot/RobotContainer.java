@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ToggleIntake;
+import frc.robot.commands.ToggleShoot;
+import frc.robot.commands.ToggleFeed;
 import frc.robot.commands.auton.BasicAuto;
 import frc.robot.controllers.DriveController;
 import frc.robot.controllers.OperatorController;
@@ -17,6 +19,8 @@ import frc.robot.controllers.XboxOperatorController;
 import frc.robot.gyros.Gyro;
 import frc.robot.gyros.NavxGyro;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Feed;
+import frc.robot.subsystems.Launcher;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,6 +32,8 @@ public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
     private final Gyro gyro = new NavxGyro();
+    private final Launcher launcher = new Launcher();
+    private final Feed feed = new Feed();
     //new XboxDriveController(new XboxController(Constants.kDriveController)),
     private final DriveController driveController = new SpektrumDriveController(
         Constants.kDriveController
@@ -54,8 +60,12 @@ public class RobotContainer {
         // Operator Controls
         operatorController.extendIntake().onTrue(new ToggleIntake(true));
         operatorController.retractIntake().onTrue(new ToggleIntake(false));
-    }
 
+        // Launcher subcommands
+        operatorController.toggleFeeder().whileTrue(new ToggleFeed(feed, true));
+        operatorController.launch().whileTrue(new ToggleShoot(launcher, true));
+        operatorController.launch().whileFalse(new ToggleShoot(launcher, false));
+    }
     public Command getAutonomousCommand() {
         return new BasicAuto(drive, gyro);
     }
