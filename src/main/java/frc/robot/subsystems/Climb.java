@@ -11,24 +11,12 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberParams;
 
-/* TODO
- funcs
- * Extend arm (cases per arm)
- * Resist gravity (cases per arm)
- * Pullup (both)
- logic
- *>If first extension, other arm should not move! ->
- *>Else, other arm should resist gravity ->
- *UNTIL extended arm is in pos.
- *Then, other arm extends as the first resists gravity in ext.d pos. until also in ext.d pos.
- *Then, both arms retract until in origin pos & resisting gravity
- *^LOOP
- */
 
 public class Climb extends SubsystemBase {
     private final SparkMax leftMotor; //SM 40
@@ -45,9 +33,8 @@ public class Climb extends SubsystemBase {
         leftAbsEncoder = new DutyCycleEncoder(0);
         rightAbsEncoder = new DutyCycleEncoder(0);
 
-        leftPID = LeftClimber.getClosedLoopController();
-        rightPID = RightClimber.getClosedLoopController();
-
+        leftPID = leftMotor.getClosedLoopController();
+        rightPID = rightMotor.getClosedLoopController();
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
@@ -57,13 +44,29 @@ public class Climb extends SubsystemBase {
 
     public void extendClimber(int ID){
         if(ID == Constants.ClimberParams.leftClimber){
-            
+            setClimberPos(Constants.ClimberParams.leftClimber, Constants.ClimberParams.maxHeight);
         }
         else if(ID == Constants.ClimberParams.rightClimber){
-            
+            setClimberPos(Constants.ClimberParams.rightClimber, Constants.ClimberParams.maxHeight);
         }
         else
             throw new IllegalArgumentException();
+    }
+
+    public void resistGravity(int ID){
+        if(ID == Constants.ClimberParams.leftClimber){
+            setClimberSpeed(ID, Constants.ClimberParams.resistGravityPercent);
+        }
+        else if(ID == Constants.ClimberParams.rightClimber){
+            setClimberSpeed(ID, Constants.ClimberParams.resistGravityPercent);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
+    public void pullUp(){
+        setClimberPos(Constants.ClimberParams.leftClimber, Constants.ClimberParams.minHeight);
+        setClimberPos(Constants.ClimberParams.rightClimber, Constants.ClimberParams.minHeight);
     }
 
 
@@ -92,7 +95,7 @@ public class Climb extends SubsystemBase {
     /** 
      * @param height encoder val for pos
      */
-    public double setClimberPos(int ID, double height){
+    public void setClimberPos(int ID, double height){
         if(ID == Constants.ClimberParams.leftClimber){
             leftPID.setReference(height, ControlType.kPosition);
         }
@@ -106,9 +109,15 @@ public class Climb extends SubsystemBase {
     /** 
      * @param percent percent -1 to 1 to run the motor at
      */
-    public void setClimberSpeed(double percent){
-        leftMotor.set(percent);
-        rightMotor.set(percent);
+    public void setClimberSpeed(int ID, double percent){
+        if(ID == Constants.ClimberParams.leftClimber){
+            leftMotor.set(percent);
+        }
+        else if(ID == Constants.ClimberParams.rightClimber){
+            rightMotor.set(percent);
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
     public void periodic() {

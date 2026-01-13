@@ -7,4 +7,9 @@ public interface OperatorController {
     public Trigger retractIntake();
     public Trigger launch();
     public Trigger toggleFeeder();
+    //To remove later:
+    public Trigger leftArmUp();
+    public Trigger leftArmDown();
+    public Trigger rightArmUp();
+    public Trigger rightArmDown();
 }
