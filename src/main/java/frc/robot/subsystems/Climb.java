@@ -20,6 +20,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberParams;
+import frc.robot.REVMagneticLimit;
 
 /* TODO
  funcs
@@ -40,6 +41,9 @@ public class Climb extends SubsystemBase {
     private final SparkMax leftMotor; //SM 40
     private final SparkMax rightMotor; //SM 41
 
+    REVMagneticLimit limitLeft;
+    REVMagneticLimit limitRight;
+
     private SparkClosedLoopController leftPID, rightPID;
     private final RelativeEncoder leftEncoder, rightEncoder;
     private final DutyCycleEncoder leftAbsEncoder, rightAbsEncoder;
@@ -53,8 +57,8 @@ public class Climb extends SubsystemBase {
             Constants.ClimberParams.rightID,
             MotorType.kBrushless
         );
-        leftAbsEncoder = new DutyCycleEncoder(0);
-        rightAbsEncoder = new DutyCycleEncoder(0);
+        leftAbsEncoder = new DutyCycleEncoder(5);
+        rightAbsEncoder = new DutyCycleEncoder(6);
 
         leftPID = leftMotor.getClosedLoopController();
         rightPID = rightMotor.getClosedLoopController();
@@ -62,6 +66,8 @@ public class Climb extends SubsystemBase {
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
+        limitLeft = new REVMagneticLimit(0);
+        limitRight = new REVMagneticLimit(1);
 
         configMotor();
     }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climb;
@@ -36,12 +37,20 @@ public class ClimbUpDown extends Command {
     }
 
     @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
     public void end(boolean interrupted){
-        if(leftArm){
+        // if(leftArm){
+            SmartDashboard.putString("THE POSITION: ", "1rd");
             climber.stopClimber(Constants.ClimberParams.rightID);
-        }
-        else{
+        // }
+        // else{
+            // SmartDashboard.putString("THE POSITION: ", "2rd");
             climber.stopClimber(Constants.ClimberParams.leftID);
-        }
+        // }
+        // SmartDashboard.putString("THE POSITION: ", "3rd");
     }
 }
