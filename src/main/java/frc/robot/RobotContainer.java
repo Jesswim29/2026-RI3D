@@ -19,6 +19,7 @@ import frc.robot.gyros.Gyro;
 import frc.robot.gyros.NavxGyro;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,6 +43,8 @@ public class RobotContainer {
         );
     private final Drive drive = new Drive(gyro);
 
+    private final Intake intake = new Intake();
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         drive.setDefaultCommand(new TeleopDrive(driveController, drive, gyro));
@@ -61,10 +64,8 @@ public class RobotContainer {
         driveController.rightArmDown().whileTrue(new ClimbUpDown(climb,true,false));
         
         // Operator Controls
-        //operatorController.extendIntake().onTrue(new ToggleIntake(true));
-        //operatorController.retractIntake().onTrue(new ToggleIntake(false));
-
-        //Insert While true set position to this height?
+        operatorController.extendIntake().whileTrue(new ToggleIntake(true, intake));
+        operatorController.retractIntake().whileTrue(new ToggleIntake(false, intake));
     }
 
     public Command getAutonomousCommand() {
