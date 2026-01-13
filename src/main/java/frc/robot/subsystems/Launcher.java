@@ -38,21 +38,14 @@ public class Launcher extends SubsystemBase {
     private void configMotors(){
         var LeadConfig = new SparkMaxConfig();
         //TODO find kP, kI, kD controls dunno if drivetrain constants count? as well as the rest of the values
-        LeadConfig.encoder.positionConversionFactor(0)
-        .velocityConversionFactor(0);
+        LeadConfig.encoder.positionConversionFactor(1)
+        .velocityConversionFactor(1);
 
         LeadConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(Constants.LauncherConstants.flykP, Constants.LauncherConstants.flykI, Constants.LauncherConstants.flykD);
-
+        
         Leader.configure(LeadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-
-
-
-        //Configure FollowerID to be a follower of leader sparkmax
-        var FollowConfig = new SparkMaxConfig();
-
-        FollowConfig.follow(Leader.getDeviceId(), false);
     
     }
 
@@ -63,7 +56,7 @@ public class Launcher extends SubsystemBase {
     }
     public void setVelocity(double speed) {
         LeadPID.setReference(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0, feedForward.calculate(speed));
-        Leader.set(speed);
+        Leader.set(-speed);
     }
     public void stopMotors(){
         Leader.stopMotor();
