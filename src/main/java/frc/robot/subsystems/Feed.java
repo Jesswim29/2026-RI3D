@@ -21,7 +21,7 @@ public class Feed extends SubsystemBase{
 
     }
     public void Activate() {
-        Feed.set(.25);
+        Feed.set(.5);
     }
     public void stopMotors() {
         Feed.stopMotor();
