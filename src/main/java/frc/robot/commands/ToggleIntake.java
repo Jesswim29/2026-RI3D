@@ -1,32 +1,50 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
 public class ToggleIntake extends Command {
 
     boolean extend = false;
     Intake intake;
+    double speed = 0;
+
+    private PIDController pivotPID;
 
     public ToggleIntake(boolean extend, Intake intake) {
         this.extend = extend;
         this.intake = intake;
+
+        pivotPID = new PIDController(
+            Constants.IntakeConstants.kP,
+            Constants.IntakeConstants.kI,
+            Constants.IntakeConstants.kD
+        );
     }
 
     @Override
     public void initialize() {
-        if (extend) {
-            intake.setPivotPos(120);
-            intake.setRollerSpeed(.5);
-        } else {
-            intake.setPivotPos(30);
-            intake.setRollerSpeed(0);
-        }
+        
     }
 
     @Override
     public void execute() {
-        //here for examples and so andrew can copy paste (im lazy ok)
+        if (extend) {
+            pivotPID.setSetpoint(110);
+            // intake.setPivotPos(120);
+            intake.setRollerSpeed(.25);//.5
+        } else {
+            pivotPID.setSetpoint(30);
+            // intake.setPivotPos(30);
+            intake.setRollerSpeed(0);
+        }
+        speed = pivotPID.calculate(intake.getAbsolutePivotPos());
+        intake.setPivotSpeed(speed);
+        SmartDashboard.putNumber("POSITION I HATE NUMEBRS", pivotPID.getSetpoint());
+        SmartDashboard.putNumber("SPEED I HATE NUMEBRS", speed);
     }
 
     @Override

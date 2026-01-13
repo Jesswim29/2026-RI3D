@@ -94,4 +94,16 @@ public class SpektrumDriveController
     public Trigger reset() {
         return new Trigger(() -> (getRawButton(SpektrumButton.Reset.value)));
     }
+    public Trigger leftArmUp() {
+        return new Trigger(() -> (getRawButton(SpektrumButton.CUp.value)));
+    }
+    public Trigger leftArmDown() {
+        return new Trigger(() -> (getRawButton(SpektrumButton.CDown.value)));
+    }
+    public Trigger rightArmUp() {
+        return new Trigger(() -> (getRawButton(SpektrumButton.FUp.value)));
+    }
+    public Trigger rightArmDown() {
+        return new Trigger(() -> (getRawButton(SpektrumButton.FDown.value)));
+    }
 }
