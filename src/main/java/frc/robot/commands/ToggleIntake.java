@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
@@ -28,42 +27,34 @@ public class ToggleIntake extends Command {
     }
 
     @Override
-    public void initialize() {
-        SmartDashboard.putBoolean("ASKJFBNBJKSABJFBHJSB JFHBSHJDBFBSHJAKFB", false);
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
         // if (extend) {
-            pivotPID.setSetpoint(110);
-            // point = 110;
-            // intake.setPivotPos(120);
-            intake.setRollerSpeed(.25);//.5
+        pivotPID.setSetpoint(110);
+        // point = 110;
+        // intake.setPivotPos(120);
+        intake.setRollerSpeed(.35); //.5
 
-            // speed = 1 - intake.getAbsolutePivotPos()/point * .5;
-            // if(point > intake.getAbsolutePivotPos()){
-                
-            // }else{
+        // speed = 1 - intake.getAbsolutePivotPos()/point * .5;
+        // if(point > intake.getAbsolutePivotPos()){
 
-            // }
+        // }else{
+
+        // }
         // } else {
         //     pivotPID.setSetpoint(30);
         //     // intake.setPivotPos(30);
         //     intake.setRollerSpeed(0);
         // }
         speed = pivotPID.calculate(intake.getAbsolutePivotPos());
-        
+
         intake.setPivotSpeed(speed);
-        SmartDashboard.putNumber("POSITION I HATE NUMEBRS", pivotPID.getSetpoint());
-        SmartDashboard.putNumber("SPEED I HATE NUMEBRS", speed);
-        
-        System.out.println("SPEED I HATE NUMEBRS: " + speed);
     }
 
     @Override
-    public void end(boolean interrupted) {
-        SmartDashboard.putBoolean("ASKJFBNBJKSABJFBHJSB JFHBSHJDBFBSHJAKFB", true);
-    }
+    public void end(boolean interrupted) {}
 
     @Override
     public boolean isFinished() {

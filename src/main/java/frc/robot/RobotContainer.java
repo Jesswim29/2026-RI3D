@@ -12,6 +12,7 @@ import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ToggleFeed;
 import frc.robot.commands.ToggleIntake;
+import frc.robot.commands.ToggleReverseIntake;
 import frc.robot.commands.ToggleShoot;
 import frc.robot.commands.auton.BasicAuto;
 import frc.robot.controllers.DriveController;
@@ -85,6 +86,12 @@ public class RobotContainer {
             .retractIntake()
             .whileTrue(new IntakeIn(false, intake));
 
+        operatorController
+            .reverseIntake()
+            .onTrue(new ToggleReverseIntake(intake, true));
+        operatorController
+            .reverseIntake()
+            .onFalse(new ToggleReverseIntake(intake, false));
         // Launcher subcommands
         operatorController.toggleFeeder().whileTrue(new ToggleFeed(feed, true));
         operatorController.launch().whileTrue(new ToggleShoot(launcher, true));

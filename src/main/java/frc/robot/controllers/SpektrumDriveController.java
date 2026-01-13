@@ -45,10 +45,10 @@ public class SpektrumDriveController
 
     public double getDriveY() {
         if (getRawAxis(SpektrumAxis.DriveY.value) * driveYFactor > 1) {
-            return -1;
+            return 1;
         }
         if (getRawAxis(SpektrumAxis.DriveY.value) * driveYFactor < -1) {
-            return 1;
+            return -1;
         }
         if (
             getRawAxis(SpektrumAxis.DriveY.value) * driveYFactor >
@@ -57,7 +57,7 @@ public class SpektrumDriveController
         ) {
             return 0;
         }
-        return (getRawAxis(SpektrumAxis.DriveY.value) * driveYFactor) * -1;
+        return getRawAxis(SpektrumAxis.DriveY.value) * driveYFactor;
     }
 
     public double getThrottle() {
@@ -94,15 +94,19 @@ public class SpektrumDriveController
     public Trigger reset() {
         return new Trigger(() -> (getRawButton(SpektrumButton.Reset.value)));
     }
+
     public Trigger leftArmUp() {
         return new Trigger(() -> (getRawButton(SpektrumButton.CUp.value)));
     }
+
     public Trigger leftArmDown() {
         return new Trigger(() -> (getRawButton(SpektrumButton.CDown.value)));
     }
+
     public Trigger rightArmUp() {
         return new Trigger(() -> (getRawButton(SpektrumButton.FUp.value)));
     }
+
     public Trigger rightArmDown() {
         return new Trigger(() -> (getRawButton(SpektrumButton.FDown.value)));
     }

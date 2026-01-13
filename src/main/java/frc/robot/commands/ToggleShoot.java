@@ -16,7 +16,7 @@ public class ToggleShoot extends Command {
     @Override
     public void execute() {
         if (jorbles) {
-            launch.setVelocity(.5);
+            launch.setVelocity(0.8);
         }
         //else launch.stopMotors();
     }

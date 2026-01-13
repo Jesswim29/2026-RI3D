@@ -12,7 +12,13 @@ public class ResetGyro extends Command {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
+        System.out.println("Reset gyro...");
         gyro.zero();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

@@ -161,16 +161,16 @@ public class Drive extends SubsystemBase {
             );
 
             SwerveModuleState optimizedState = wheel.bestAngle(inputState);
-            System.out.println(
-                "calc " +
-                    calcWheelAngle[i] +
-                    " opt " +
-                    optimizedState.angle.getDegrees()
-            );
-            SmartDashboard.putNumber(
-                "Wheel " + i,
-                optimizedState.angle.getDegrees()
-            );
+            //System.out.println(
+            //    "calc " +
+            //        calcWheelAngle[i] +
+            //        " opt " +
+            //        optimizedState.angle.getDegrees()
+            //);
+            //SmartDashboard.putNumber(
+            //    "Wheel " + i,
+            //    optimizedState.angle.getDegrees()
+            //);
             wheel.setAngle(optimizedState.angle.getDegrees());
             wheel.setSpeed(optimizedState.speedMetersPerSecond);
 
@@ -186,13 +186,13 @@ public class Drive extends SubsystemBase {
      */
     public void swerve(
         double linearAngle,
-        double linearSpeed, //TODO: find difference between linearSpeed and rotation 
+        double linearSpeed, //TODO: find difference between linearSpeed and rotation
         double rotation
     ) {
         swerve(linearAngle, linearSpeed, rotation, new Translation2d(0, 0));
     }
 
-    /**  
+    /**
      * Locks the wheels in place duh
      */
     public void lockWheels() {
@@ -212,8 +212,9 @@ public class Drive extends SubsystemBase {
         double linDeltaX = Math.sin(Math.toRadians(linearAngle)) * linearSpeed;
         return new Translation2d(linDeltaX, linDeltaY);
     }
+
     /**
-     * Getting the rotation angle from the change in x and y components 
+     * Getting the rotation angle from the change in x and y components
      * @param deltaX The change in the X component
      * @param deltaY The change in the y component
      * @param linearAngle The direction for the wheels to be aligned (I think)
@@ -279,7 +280,7 @@ public class Drive extends SubsystemBase {
         //Calculating the rotational speed along the X-axis
         double rotationalSpeedX =
             Math.sin(Math.toRadians(rotationAngle)) * Math.abs(rotation);
-        
+
         //If the difference between new and old X and Y coordinates is zero, then there is no knew position to calculate
         if (deltaX == 0 && deltaY == 0) {
             rotationalSpeedX = 0;
@@ -310,5 +311,5 @@ public class Drive extends SubsystemBase {
 
     public Wheel[] getWheels() {
         return wheels;
-      }
+    }
 }

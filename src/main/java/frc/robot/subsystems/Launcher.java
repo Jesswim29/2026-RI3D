@@ -15,17 +15,17 @@ import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase {
 
-    private final SparkMax Leader;
-    private final SparkClosedLoopController LeadPID;
+    private final SparkMax leader;
+    private final SparkClosedLoopController leadPID;
     final SimpleMotorFeedforward feedForward;
 
     public Launcher() {
         //Configuring Lead sparkmax motorcontroller
-        Leader = new SparkMax(
+        leader = new SparkMax(
             Constants.LauncherConstants.flywheel1,
             MotorType.kBrushless
         );
-        LeadPID = Leader.getClosedLoopController();
+        leadPID = leader.getClosedLoopController();
 
         //Setting feedforwardrate
         feedForward = new SimpleMotorFeedforward(0.12, .473);
@@ -35,13 +35,13 @@ public class Launcher extends SubsystemBase {
     }
 
     private void configMotors() {
-        var LeadConfig = new SparkMaxConfig();
+        var leadConfig = new SparkMaxConfig();
         //TODO find kP, kI, kD controls dunno if drivetrain constants count? as well as the rest of the values
-        LeadConfig.encoder
+        leadConfig.encoder
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
 
-        LeadConfig.closedLoop
+        leadConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pid(
                 Constants.LauncherConstants.flykP,
@@ -49,8 +49,8 @@ public class Launcher extends SubsystemBase {
                 Constants.LauncherConstants.flykD
             );
 
-        Leader.configure(
-            LeadConfig,
+        leader.configure(
+            leadConfig,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters
         );
@@ -58,21 +58,21 @@ public class Launcher extends SubsystemBase {
 
     public double getVelocity() {
         //TODO return speed for flywheel
-        return Leader.getEncoder().getVelocity();
+        return leader.getEncoder().getVelocity();
     }
 
     public void setVelocity(double speed) {
-        LeadPID.setReference(
+        leadPID.setReference(
             speed,
             ControlType.kVelocity,
             ClosedLoopSlot.kSlot0,
             feedForward.calculate(speed)
         );
-        Leader.set(-speed);
+        leader.set(-speed);
     }
 
     public void stopMotors() {
-        Leader.stopMotor();
+        leader.stopMotor();
     }
 
     @Override
