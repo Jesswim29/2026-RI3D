@@ -16,7 +16,21 @@ public class TestLimit extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Limit A", limitA.get().getAsBoolean());
-        SmartDashboard.putBoolean("Limit B", limitB.get().getAsBoolean());
+        frc.robot.commands.ClimbUpDown.limitSwitchLeft = limitA
+            .get()
+            .getAsBoolean();
+        frc.robot.commands.ClimbUpDown.limitSwitchRight = limitB
+            .get()
+            .getAsBoolean();
+
+        SmartDashboard.putBoolean(
+            "left limit",
+            frc.robot.commands.ClimbUpDown.limitSwitchLeft
+        );
+
+        SmartDashboard.putBoolean(
+            "right limit",
+            frc.robot.commands.ClimbUpDown.limitSwitchRight
+        );
     }
 }

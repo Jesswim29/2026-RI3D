@@ -1,23 +1,21 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberParams;
 import frc.robot.REVMagneticLimit;
@@ -41,8 +39,8 @@ public class Climb extends SubsystemBase {
     private final SparkMax leftMotor; //SM 40
     private final SparkMax rightMotor; //SM 41
 
-    REVMagneticLimit limitLeft;
-    REVMagneticLimit limitRight;
+    // REVMagneticLimit limitLeft;
+    // REVMagneticLimit limitRight;
 
     private SparkClosedLoopController leftPID, rightPID;
     private final RelativeEncoder leftEncoder, rightEncoder;
@@ -66,8 +64,8 @@ public class Climb extends SubsystemBase {
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        limitLeft = new REVMagneticLimit(0);
-        limitRight = new REVMagneticLimit(1);
+        // limitLeft = new REVMagneticLimit(0);
+        // limitRight = new REVMagneticLimit(1);
 
         configMotor();
     }
@@ -80,7 +78,7 @@ public class Climb extends SubsystemBase {
         } else throw new IllegalArgumentException();
     }
 
-    public void retractClimber(int id){
+    public void retractClimber(int id) {
         if (id == Constants.ClimberParams.leftID) {
             leftMotor.set(-0.2);
         } else if (id == Constants.ClimberParams.rightID) {
@@ -123,7 +121,7 @@ public class Climb extends SubsystemBase {
         rightMotor.set(percent);
     }
 
-    public void stopClimber(int id){
+    public void stopClimber(int id) {
         if (id == Constants.ClimberParams.leftID) {
             leftMotor.stopMotor();
         } else if (id == Constants.ClimberParams.rightID) {
@@ -150,15 +148,14 @@ public class Climb extends SubsystemBase {
     public void setPosition(SparkClosedLoopController PID, double distance) {
         //Sets the position of either motor to the specified distance
         PID.setReference(distance, ControlType.kPosition);
-
     }
+
     public double getPosition(SparkMax motor) {
         return motor.getEncoder().getPosition();
-        
     }
-    public void resetEncoders() {
-        
-    }
+
+    public void resetEncoders() {}
+
     public void stopMotors(SparkMax motor) {
         motor.set(0);
     }

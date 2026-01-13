@@ -6,31 +6,31 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climb;
 
 public class ClimbUpDown extends Command {
+
+    public static boolean limitSwitchLeft = false;
+    public static boolean limitSwitchRight = false;
     boolean down;
     Climb climber;
     boolean leftArm;
 
-    public ClimbUpDown(Climb climber, boolean down, boolean leftArm){
+    public ClimbUpDown(Climb climber, boolean down, boolean leftArm) {
         this.down = down;
         this.climber = climber;
         this.leftArm = leftArm;
     }
 
     @Override
-    public void execute(){
-        if(leftArm){
-            if(down){
+    public void execute() {
+        if (leftArm) {
+            if (down && limitSwitchLeft == false) {
                 climber.retractClimber(Constants.ClimberParams.leftID);
-            }
-            else{
+            } else {
                 climber.extendClimber(Constants.ClimberParams.leftID);
             }
-        }
-        else{
-            if(down){
+        } else {
+            if (down && limitSwitchRight == false) {
                 climber.retractClimber(Constants.ClimberParams.rightID);
-            }
-            else{
+            } else {
                 climber.extendClimber(Constants.ClimberParams.rightID);
             }
         }
@@ -42,14 +42,14 @@ public class ClimbUpDown extends Command {
     }
 
     @Override
-    public void end(boolean interrupted){
+    public void end(boolean interrupted) {
         // if(leftArm){
-            SmartDashboard.putString("THE POSITION: ", "1rd");
-            climber.stopClimber(Constants.ClimberParams.rightID);
+        SmartDashboard.putString("THE POSITION: ", "1rd");
+        climber.stopClimber(Constants.ClimberParams.rightID);
         // }
         // else{
-            // SmartDashboard.putString("THE POSITION: ", "2rd");
-            climber.stopClimber(Constants.ClimberParams.leftID);
+        // SmartDashboard.putString("THE POSITION: ", "2rd");
+        climber.stopClimber(Constants.ClimberParams.leftID);
         // }
         // SmartDashboard.putString("THE POSITION: ", "3rd");
     }

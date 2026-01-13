@@ -10,9 +10,9 @@ import frc.robot.commands.ClimbUpDown;
 import frc.robot.commands.IntakeIn;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.ToggleFeed;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleShoot;
-import frc.robot.commands.ToggleFeed;
 import frc.robot.commands.auton.BasicAuto;
 import frc.robot.controllers.DriveController;
 import frc.robot.controllers.OperatorController;
@@ -23,8 +23,8 @@ import frc.robot.gyros.NavxGyro;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Feed;
-import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Launcher;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -59,28 +59,39 @@ public class RobotContainer {
         // Button mappings
         bindButtons();
 
-        // new frc.robot.subsystems.TestLimit();
+        new frc.robot.subsystems.TestLimit();
     }
 
     private void bindButtons() {
         // Drive Controls
         driveController.reset().onTrue(new ResetGyro(gyro));
-        driveController.leftArmUp().whileTrue(new ClimbUpDown(climb,false,true));
-        driveController.leftArmDown().whileTrue(new ClimbUpDown(climb,true,true));
-        driveController.rightArmUp().whileTrue(new ClimbUpDown(climb,false,false));
-        driveController.rightArmDown().whileTrue(new ClimbUpDown(climb,true,false));
-        
+        driveController
+            .leftArmUp()
+            .whileTrue(new ClimbUpDown(climb, false, true));
+        driveController
+            .leftArmDown()
+            .whileTrue(new ClimbUpDown(climb, true, true));
+        driveController
+            .rightArmUp()
+            .whileTrue(new ClimbUpDown(climb, false, false));
+        driveController
+            .rightArmDown()
+            .whileTrue(new ClimbUpDown(climb, true, false));
+
         // Operator Controls
-        operatorController.extendIntake().whileTrue(new ToggleIntake(true, intake));
+        operatorController
+            .extendIntake()
+            .whileTrue(new ToggleIntake(true, intake));
         // operatorController.retractIntake().whileTrue(new ToggleIntake(false, intake));
-        operatorController.retractIntake().whileTrue(new IntakeIn(false, intake));
+        operatorController
+            .retractIntake()
+            .whileTrue(new IntakeIn(false, intake));
 
         // Launcher subcommands
         operatorController.toggleFeeder().whileTrue(new ToggleFeed(feed, true));
         operatorController.launch().whileTrue(new ToggleShoot(launcher, true));
     }
 
-        
     public Command getAutonomousCommand() {
         return new BasicAuto(drive, gyro);
     }
