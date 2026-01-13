@@ -1,10 +1,10 @@
 package frc.robot.commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import java.util.function.ToLongBiFunction;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.*;
 
-public class ToggleFeed extends Command{
+public class ToggleFeed extends Command {
+
     boolean jorbles = true;
     private Feed feed;
 
@@ -12,13 +12,13 @@ public class ToggleFeed extends Command{
         this.feed = feeder;
         this.jorbles = jorbie;
     }
+
     @Override
     public void execute() {
-        if(jorbles) {
+        if (jorbles) {
             feed.Activate();
         }
         //else feed.stopMotors();
-
     }
 
     @Override

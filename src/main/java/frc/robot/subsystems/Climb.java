@@ -2,20 +2,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberParams;
 import frc.robot.REVMagneticLimit;
@@ -39,8 +32,8 @@ public class Climb extends SubsystemBase {
     private final SparkMax leftMotor; //SM 40
     private final SparkMax rightMotor; //SM 41
 
-    // REVMagneticLimit limitLeft;
-    // REVMagneticLimit limitRight;
+    REVMagneticLimit limitLeft;
+    REVMagneticLimit limitRight;
 
     private SparkClosedLoopController leftPID, rightPID;
     private final RelativeEncoder leftEncoder, rightEncoder;
@@ -64,8 +57,8 @@ public class Climb extends SubsystemBase {
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        // limitLeft = new REVMagneticLimit(0);
-        // limitRight = new REVMagneticLimit(1);
+        limitLeft = new REVMagneticLimit(0);
+        limitRight = new REVMagneticLimit(1);
 
         configMotor();
     }
@@ -79,10 +72,20 @@ public class Climb extends SubsystemBase {
     }
 
     public void retractClimber(int id) {
-        if (id == Constants.ClimberParams.leftID) {
+        if (
+            id == Constants.ClimberParams.leftID &&
+            limitLeft.get().getAsBoolean() == false
+        ) {
             leftMotor.set(-0.2);
-        } else if (id == Constants.ClimberParams.rightID) {
+        } else if (
+            id == Constants.ClimberParams.rightID &&
+            limitRight.get().getAsBoolean() == false
+        ) {
             rightMotor.set(-0.2);
+        } else if (id == Constants.ClimberParams.leftID) {
+            leftMotor.set(0);
+        } else if (id == Constants.ClimberParams.rightID) {
+            rightMotor.set(0);
         } else throw new IllegalArgumentException();
     }
 

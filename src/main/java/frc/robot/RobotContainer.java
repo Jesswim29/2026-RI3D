@@ -58,8 +58,6 @@ public class RobotContainer {
 
         // Button mappings
         bindButtons();
-
-        new frc.robot.subsystems.TestLimit();
     }
 
     private void bindButtons() {

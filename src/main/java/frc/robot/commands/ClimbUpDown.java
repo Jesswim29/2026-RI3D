@@ -7,8 +7,6 @@ import frc.robot.subsystems.Climb;
 
 public class ClimbUpDown extends Command {
 
-    public static boolean limitSwitchLeft = false;
-    public static boolean limitSwitchRight = false;
     boolean down;
     Climb climber;
     boolean leftArm;
@@ -22,13 +20,13 @@ public class ClimbUpDown extends Command {
     @Override
     public void execute() {
         if (leftArm) {
-            if (down && limitSwitchLeft == false) {
+            if (down) {
                 climber.retractClimber(Constants.ClimberParams.leftID);
             } else {
                 climber.extendClimber(Constants.ClimberParams.leftID);
             }
         } else {
-            if (down && limitSwitchRight == false) {
+            if (down) {
                 climber.retractClimber(Constants.ClimberParams.rightID);
             } else {
                 climber.extendClimber(Constants.ClimberParams.rightID);
