@@ -82,12 +82,11 @@ public final class Constants {
     }
 
     public static class LauncherConstants {
-        public static final int flywheel1 = 20;
-        public static final int flywheel2 = 21;
+        public static final int flywheel1 = 21;
         public static final int feeder = 22;
-        public static final int flykP = 0;
-        public static final int flykI = 0;
-        public static final int flykD = 0;
+        public static final double flykP = .001;
+        public static final double flykI = 0;
+        public static final double flykD = 0;
     }
 
     public static class IntakeConstants {

@@ -17,9 +17,17 @@ public class ToggleFeed extends Command{
         if(jorbles) {
             feed.Activate();
         }
-        else feed.stopMotors();
+        //else feed.stopMotors();
 
     }
 
-    
+    @Override
+    public void end(boolean interrupted) {
+        feed.stopMotors();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

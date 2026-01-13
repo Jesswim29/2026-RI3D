@@ -64,7 +64,6 @@ public class RobotContainer {
         // Launcher subcommands
         operatorController.toggleFeeder().whileTrue(new ToggleFeed(feed, true));
         operatorController.launch().whileTrue(new ToggleShoot(launcher, true));
-        operatorController.launch().whileFalse(new ToggleShoot(launcher, false));
     }
     public Command getAutonomousCommand() {
         return new BasicAuto(drive, gyro);

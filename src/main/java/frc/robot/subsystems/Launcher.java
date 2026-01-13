@@ -21,14 +21,13 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class Launcher extends SubsystemBase {
     private final SparkMax Leader;
-    private final SparkMax Follower;
     private final SparkClosedLoopController LeadPID;
     final SimpleMotorFeedforward feedForward;
     public Launcher() {
         //Configuring Lead sparkmax motorcontroller
         Leader = new SparkMax(Constants.LauncherConstants.flywheel1, MotorType.kBrushless);
         LeadPID = Leader.getClosedLoopController();
-        Follower = new SparkMax(Constants.LauncherConstants.flywheel2, MotorType.kBrushless);
+        
         //Setting feedforwardrate
         feedForward = new SimpleMotorFeedforward(0.12, .473);
 
@@ -54,7 +53,6 @@ public class Launcher extends SubsystemBase {
         var FollowConfig = new SparkMaxConfig();
 
         FollowConfig.follow(Leader.getDeviceId(), false);
-        Follower.configure(FollowConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     }
 
@@ -65,6 +63,7 @@ public class Launcher extends SubsystemBase {
     }
     public void setVelocity(double speed) {
         LeadPID.setReference(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0, feedForward.calculate(speed));
+        Leader.set(speed);
     }
     public void stopMotors(){
         Leader.stopMotor();
