@@ -81,6 +81,17 @@ public final class Constants {
         }
     }
 
+    public static class ClimberParams {
+
+        public static final int leftID = 40;
+        public static final int rightID = 41;
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
+        public static final double FF = 0;
+        //public static final double maxHeight = ;
+    }
+
     public static class LauncherConstants {
         public static final int flywheel1 = 21;
         public static final int feeder = 22;
@@ -90,8 +101,15 @@ public final class Constants {
     }
 
     public static class IntakeConstants {
+
         public static final int intakePivot = 30;
         public static final int intakeRoller = 31;
+        //im going to explode death to this stupid number
+        public static final double intakeConversionFactor = 10;//((1.0/(25.0*42.0))*360);
+        public static final double kP = 0.00075;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kFF = 0;
     }
 
     //no touch please or bad things happen

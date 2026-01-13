@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.ClimbUpDown;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ToggleIntake;
@@ -18,9 +19,11 @@ import frc.robot.controllers.SpektrumDriveController;
 import frc.robot.controllers.XboxOperatorController;
 import frc.robot.gyros.Gyro;
 import frc.robot.gyros.NavxGyro;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Feed;
 import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,6 +41,7 @@ public class RobotContainer {
     private final DriveController driveController = new SpektrumDriveController(
         Constants.kDriveController
     );
+    private final Climb climb = new Climb();
 
     private final OperatorController operatorController =
         new XboxOperatorController(
@@ -45,21 +49,30 @@ public class RobotContainer {
         );
     private final Drive drive = new Drive(gyro);
 
+    private final Intake intake = new Intake();
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         drive.setDefaultCommand(new TeleopDrive(driveController, drive, gyro));
 
         // Button mappings
         bindButtons();
+
+        // new frc.robot.subsystems.TestLimit();
     }
 
     private void bindButtons() {
         // Drive Controls
         driveController.reset().onTrue(new ResetGyro(gyro));
-
+        driveController.leftArmUp().whileTrue(new ClimbUpDown(climb,false,true));
+        driveController.leftArmDown().whileTrue(new ClimbUpDown(climb,true,true));
+        driveController.rightArmUp().whileTrue(new ClimbUpDown(climb,false,false));
+        driveController.rightArmDown().whileTrue(new ClimbUpDown(climb,true,false));
+        
         // Operator Controls
-        operatorController.extendIntake().onTrue(new ToggleIntake(true));
-        operatorController.retractIntake().onTrue(new ToggleIntake(false));
+        operatorController.extendIntake().whileTrue(new ToggleIntake(true, intake));
+        operatorController.retractIntake().whileTrue(new ToggleIntake(false, intake));
+    }
 
         // Launcher subcommands
         operatorController.toggleFeeder().whileTrue(new ToggleFeed(feed, true));
