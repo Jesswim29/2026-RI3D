@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberParams;
 import frc.robot.REVMagneticLimit;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
 /* TODO
  funcs
@@ -32,6 +34,9 @@ public class Climb extends SubsystemBase {
     private final SparkMax leftMotor; //SM 40
     private final SparkMax rightMotor; //SM 41
 
+    SparkMaxConfig leftConfig = new SparkMaxConfig();
+    SparkMaxConfig rightConfig = new SparkMaxConfig();
+
     REVMagneticLimit limitLeft;
     REVMagneticLimit limitRight;
 
@@ -51,6 +56,9 @@ public class Climb extends SubsystemBase {
         leftAbsEncoder = new DutyCycleEncoder(5);
         rightAbsEncoder = new DutyCycleEncoder(6);
 
+        leftConfig
+            .follow(Constants.ClimberParams.rightID);
+
         leftPID = leftMotor.getClosedLoopController();
         rightPID = rightMotor.getClosedLoopController();
 
@@ -60,7 +68,31 @@ public class Climb extends SubsystemBase {
         limitLeft = new REVMagneticLimit(0);
         limitRight = new REVMagneticLimit(1);
 
-        configMotor();
+        leftMotor.configure(
+            leftConfig,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
+
+        rightMotor.configure(
+            rightConfig,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
+
+        // configMotor();
+    }
+
+    public void up(){
+        rightMotor.set(.2);
+    }
+
+    public void down(){
+        rightMotor.set(-.2);
+    }
+
+    public void stop(){
+        rightMotor.set(0);
     }
 
     public void extendClimber(int id) {
@@ -134,19 +166,19 @@ public class Climb extends SubsystemBase {
 
     public void periodic() {}
 
-    private void configMotor() {
-        var config = new SparkMaxConfig();
+    // private void configMotor() {
+    //     var config = new SparkMaxConfig();
 
-        config.encoder.positionConversionFactor(0).velocityConversionFactor(0);
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pidf(
-                ClimberParams.P,
-                ClimberParams.I,
-                ClimberParams.D,
-                ClimberParams.FF
-            );
-    }
+    //     config.encoder.positionConversionFactor(0).velocityConversionFactor(0);
+    //     config.closedLoop
+    //         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    //         .pidf(
+    //             ClimberParams.P,
+    //             ClimberParams.I,
+    //             ClimberParams.D,
+    //             ClimberParams.FF
+    //         );
+    // }
 
     public void setPosition(SparkClosedLoopController PID, double distance) {
         //Sets the position of either motor to the specified distance

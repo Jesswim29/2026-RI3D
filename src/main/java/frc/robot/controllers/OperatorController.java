@@ -8,4 +8,7 @@ public interface OperatorController {
     public Trigger reverseIntake();
     public Trigger launch();
     public Trigger toggleFeeder();
+    public Trigger climberUp();
+    public Trigger climberDown();
+    public Trigger climberStop();
 }

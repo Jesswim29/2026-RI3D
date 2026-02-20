@@ -30,4 +30,16 @@ public class XboxOperatorController implements OperatorController {
     public Trigger toggleFeeder() {
         return new Trigger(() -> controller.getRightTriggerAxis() >= 0.5);
     }
+
+    public Trigger climberUp() {
+        return new Trigger(() -> controller.getRightY() >= .5);
+    }
+
+    public Trigger climberDown() {
+        return new Trigger(() -> controller.getRightY() <= .5);
+    }
+
+    public Trigger climberStop() {
+        return new Trigger(() -> (controller.getRightY() >= -.5 && controller.getRightY() <= .5));
+    }
 }

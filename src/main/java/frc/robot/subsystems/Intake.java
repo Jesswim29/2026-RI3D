@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
 
     public boolean reverse = false;
 
-    private final SparkMax pivotMotor, rollerMotor;
+    private final SparkMax pivotMotor, pivotMotor2, rollerMotor;
     private final DutyCycleEncoder pivotAbsEncoder;
     private RelativeEncoder pivotEncoder;
 
@@ -25,6 +25,10 @@ public class Intake extends SubsystemBase {
     public Intake() {
         pivotMotor = new SparkMax(
             Constants.IntakeConstants.intakePivot,
+            MotorType.kBrushless
+        );
+        pivotMotor2 = new SparkMax(
+            Constants.IntakeConstants.intakePivot2,
             MotorType.kBrushless
         );
         rollerMotor = new SparkMax(
@@ -39,6 +43,7 @@ public class Intake extends SubsystemBase {
         pivotAbsEncoder = new DutyCycleEncoder(2); //TODO pick port number
 
         SparkMaxConfig pivotConfig = new SparkMaxConfig();
+        SparkMaxConfig pivot2Config = new SparkMaxConfig();
         SparkMaxConfig rollerConfig = new SparkMaxConfig();
 
         pivotConfig
@@ -53,6 +58,9 @@ public class Intake extends SubsystemBase {
         //         Constants.IntakeConstants.kD,
         //         Constants.IntakeConstants.kFF
         //     );
+        pivot2Config
+            .follow(Constants.IntakeConstants.intakePivot, true);
+        
         pivotConfig.encoder
             .positionConversionFactor(
                 Constants.IntakeConstants.intakeConversionFactor
@@ -68,11 +76,19 @@ public class Intake extends SubsystemBase {
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters
         );
+
+        pivotMotor2.configure(
+            pivot2Config,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
+        
         rollerMotor.configure(
             rollerConfig,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters
         );
+
 
         // initalize();
     }
@@ -100,10 +116,10 @@ public class Intake extends SubsystemBase {
     }
 
     public void setPivotSpeed(double speed) {
-        if (speed > .1) {
-            speed = .1;
-        } else if (speed < -.1) {
-            speed = -.1;
+        if (speed > .05) {
+            speed = .05;
+        } else if (speed < -.05) {
+            speed = -.05;
         }
         pivotMotor.set(speed);
     }
